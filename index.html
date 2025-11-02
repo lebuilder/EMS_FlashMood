@@ -9,11 +9,13 @@
     <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;700&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
     <link rel="stylesheet" href="css/index.css">
+    <link rel="stylesheet" href="css/navbar-anim.css">
     <title>SAMS </title>
     <meta name="theme-color" content="#2f9e44">
+
 </head>
 
-<body>
+<body class="animate-page">
 
     
     <nav class="site-navbar">
@@ -26,8 +28,8 @@
                 </div>
             </div>
             <div class="d-flex align-items-center" style="gap:1rem">
-                <a href="Visite_Medical.html" class="text-white mr-3" title="Visite Médical">Visite Médical</a>
-                <a href="XXX.html" class="text-white mr-3" title="XX">XX</a>
+                <a href="Visite_Medical.html" class="text-white mr-3" title="Visite Médical"><i class="fa fa-stethoscope nav-icon" aria-hidden="true"></i>Visite Médical</a>
+                <a href="XXX.html" class="text-white mr-3" title="XX"><i class="fa fa-file nav-icon" aria-hidden="true"></i>XX</a>
                 <button id="themeToggle" class="theme-toggle" aria-label="Basculer thème">🌙</button>
             </div>
         </div>
@@ -144,11 +146,28 @@
                                                 </div>
                                             </div>
 
+                                            <div class="reg-section">
+                                                <button type="button" class="reg-toggle" aria-expanded="false"><strong>Règlement PillBox</strong><span class="chev">▾</span></button>
+                                                <div class="reg-body">
+                                                    <p>⤷ Le RESPECT est primordial dans l'ensemble de l'hôpital. Tous les propos discriminatoires, haineux, insultants sont prohibés.</p>
+                                                    <p>⤷ Merci de ne pas entrer dans les zones réservées au personnel sans être accompagné d'un membre de l'hôpital.</p>
+                                                    <p>⤷ La possession de tout types d'armes ou substances illicite est formellement interdite dans l'enceinte de l'hôpital et ses alentours.</p>
+                                                    <p>⤷ Le stationnement des véhicules est interdit sur les espaces réservés aux ambulances !</p>
+                                                    <p>⤷ Seul les services publics sont autorisés à recevoir des soins prioritaires.</p>
+                                                    <p>⤷ Merci de porter une tenue décente et d'être à visage découvert dans l'enceinte de l'hôpital.</p>
+
+                                                    <p>En cliquant sur le bouton ci-dessous vous acceptez les règles de l'hôpital.</p>
+
+                                                    <p>Cordialement, La Direction</p>
+                                                </div>
+                                            </div>
+
                         <h3><strong>CONCLUSION</strong></h3>
                         <p class="conclusion">La lecture de ce règlement est obligatoire. Merci de mettre une réaction lorsque vous l’aurez lu entièrement. Des modifications peuvent être apportées, restez informés régulièrement.</p>
 
                         </div>
                     </div>
     <script src="js/index.js"></script>
+        <script src="js/navbar.js" defer></script>
 </body>
 </html>

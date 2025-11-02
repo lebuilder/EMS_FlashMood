@@ -77,6 +77,9 @@ body.dark-mode .preview-box pre, body.dark-mode .preview-content { background:#0
 /* Theme toggle button */
 .theme-toggle { border:0; background:transparent; color:inherit; font-size:1.05rem; cursor:pointer }
 
+/* small icon in navbar links */
+.site-navbar .nav-icon{ margin-right:0.5rem; font-size:0.95rem }
+
 /* Reglement styling: serious, readable and modern */
 .reglement-card .reg-content {
     display: block;

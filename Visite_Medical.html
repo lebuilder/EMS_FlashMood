@@ -8,13 +8,14 @@
             integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
         <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;700&display=swap" rel="stylesheet">
         <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
-        <link rel="stylesheet" href="css/index.css">
+    <link rel="stylesheet" href="css/index.css">
+    <link rel="stylesheet" href="css/navbar-anim.css">
         <title>SAMS </title>
         <meta name="theme-color" content="#2f9e44">
         <!-- page CSS moved to css/index.css -->
     </head>
 
-    <body>
+    <body class="animate-page">
         <nav class="site-navbar">
             <div class="container d-flex align-items-center justify-content-between">
                 <div class="brand">
@@ -25,8 +26,8 @@
                     </div>
                 </div>
                 <div class="d-flex align-items-center" style="gap:1rem">
-                    <a href="index.html" class="text-white mr-3" title="Réglement">Réglement</a>
-                    <a href="XXX.html" class="text-white mr-3" title="XX">XX</a>
+                    <a href="index.html" class="text-white mr-3" title="Réglement"><i class="fa fa-book nav-icon" aria-hidden="true"></i>Règlement</a>
+                    <a href="XXX.html" class="text-white mr-3" title="XX"><i class="fa fa-file nav-icon" aria-hidden="true"></i>XX</a>
                     <button id="themeToggle" class="theme-toggle" aria-label="Basculer thème">🌙</button>
                 </div>
             </div>
@@ -44,6 +45,7 @@
         </div>
 
         <script src="js/theme.js"></script>
+        <script src="js/navbar.js" defer></script>
         <script src="js/index.js"></script>
     </body>
 </html>

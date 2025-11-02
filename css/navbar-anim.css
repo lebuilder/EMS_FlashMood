@@ -1,0 +1,26 @@
+/* Shared navbar and small UI animations for EMS pages */
+.animate-page .page-wrapper { animation: fadeInUp .36s cubic-bezier(.2,.9,.3,1) both; }
+.site-navbar a{ position:relative; display:inline-flex; align-items:center; gap:0.35rem; transition:color .18s ease, transform .12s ease; }
+.site-navbar a::after{ content:""; position:absolute; left:0; right:0; bottom:-6px; height:2px; background:rgba(255,255,255,0.14); transform:scaleX(0); transform-origin:left center; transition:transform .22s cubic-bezier(.2,.9,.3,1); border-radius:2px }
+.site-navbar a:hover::after{ transform:scaleX(1) }
+.site-navbar a:hover .nav-icon{ transform: translateY(-2px) rotate(-6deg); opacity:0.95 }
+.site-navbar a.active { text-decoration:underline; font-weight:700; opacity:1 }
+
+/* reg-body reveal animation for open state */
+.reg-body { will-change: max-height, opacity; }
+.reg-section.open .reg-body { animation: revealDown .28s ease both }
+
+@keyframes revealDown {
+  from { opacity:0; transform:translateY(-6px); }
+  to { opacity:1; transform:translateY(0); }
+}
+
+@keyframes fadeInUp {
+  from { opacity:0; transform:translateY(8px); }
+  to { opacity:1; transform:translateY(0); }
+}
+
+@media (prefers-reduced-motion: reduce){
+  .animate-page .page-wrapper, .reg-section.open .reg-body { animation: none !important }
+  .site-navbar a::after { transition: none }
+}
