@@ -1,0 +1,78 @@
+/* Extracted from index.html - layout, navbar, med-card, preview modal, dark-mode, transitions */
+/* Layout & fonts */
+body {
+    font-family: 'Roboto', sans-serif;
+    margin: 0;
+    min-height: 100vh;
+    background: linear-gradient(rgba(12,34,63,0.55), rgba(12,34,63,0.55)), url('media/bg.jpg') center/cover no-repeat fixed;
+    color: #222;
+}
+
+/* Navbar styling */
+.site-navbar {
+    background: #2f9e44;
+    color: #fff;
+    padding: 0.5rem 1rem;
+    box-shadow: 0 2px 6px rgba(0,0,0,0.2);
+}
+.site-navbar .brand { display:flex; align-items:center; gap:0.75rem; }
+.site-navbar img { height:44px; width:auto; border-radius:4px; background:#fff; padding:2px }
+.site-navbar .title { font-weight:700; font-size:1.125rem; color:#fff }
+
+/* Center the MED card */
+.page-wrapper { display:flex; align-items:flex-start; justify-content:center; padding:2.25rem 1rem; }
+.med-card {
+    width:100%;
+    max-width:980px;
+    background: rgba(255,255,255,0.95);
+    border-radius:10px;
+    box-shadow: 0 10px 30px rgba(2,6,23,0.35);
+    padding:1.25rem;
+    margin: 1rem;
+}
+
+/* Headings and small tweaks */
+h1.site-heading { margin:0; color:#fff; font-weight:700 }
+h2 { margin-top:0 }
+.form-group label { font-weight:600 }
+
+/* Buttons spacing */
+.btn + .btn { margin-left:0.5rem }
+
+/* Faits list items */
+.fact-item { display:flex; justify-content:space-between; align-items:center; gap:0.5rem }
+.fact-item .fact-name { flex:1 }
+.fact-remove { background:transparent; border:0; color:#c0392b; font-weight:700; cursor:pointer; font-size:1rem }
+.fact-remove:hover { color:#e74c3c }
+
+@media (max-width: 768px) {
+    .med-card { padding:0.75rem; margin:0.5rem }
+    .site-navbar .title { font-size:1rem }
+}
+
+/* Preview modal */
+.preview-overlay{ position:fixed; inset:0; background:rgba(0,0,0,0.6); display:none; align-items:center; justify-content:center; z-index:2000 }
+.preview-box{ background:#fff; width:90%; max-width:900px; border-radius:8px; padding:1rem; box-shadow:0 10px 30px rgba(0,0,0,0.4); max-height:85vh; overflow:auto }
+.preview-box{ position:relative }
+.preview-box pre{ background:#f7f7f9; padding:0.75rem; border-radius:6px; white-space:pre-wrap; word-wrap:break-word }
+.preview-box .preview-content{ background:#f7f7f9; padding:0.75rem; border-radius:6px; color:#111 }
+.preview-actions{ display:flex; gap:0.5rem; justify-content:flex-end; margin-top:0.75rem }
+
+/* Smooth theme transitions */
+body, .site-navbar, .med-card, .preview-box, .preview-content, .form-control, .btn, .fact-item { 
+    transition: background-color .25s ease, color .25s ease, border-color .25s ease, box-shadow .25s ease;
+}
+/* small copy badge inside preview */
+.copy-badge{ position:absolute; top:12px; right:16px; background:#1f7a3a; color:#fff; padding:6px 10px; border-radius:6px; box-shadow:0 6px 18px rgba(2,6,23,0.35); display:none; z-index:2100; font-size:0.9rem }
+body.dark-mode .copy-badge{ background:#1f6d37 }
+
+/* Dark mode styles */
+body.dark-mode { background: linear-gradient(rgba(2,6,23,0.9), rgba(2,6,23,0.9)), url('media/bg.jpg') center/cover no-repeat fixed; color:#ddd }
+body.dark-mode .site-navbar { background:#0f3d26 }
+body.dark-mode .med-card, body.dark-mode .preview-box { background: #0f1720; color:#e6eef8 }
+body.dark-mode .form-control { background:#0f1720; color:#e6eef8; border-color: #165f2b }
+body.dark-mode .btn-primary { background:#1f7a3a; border-color:#165f2b }
+body.dark-mode .btn-light { background:#1b2b35; color:#e6eef8 }
+body.dark-mode .preview-box pre, body.dark-mode .preview-content { background:#071216; color:#cfe8ff }
+/* Theme toggle button */
+.theme-toggle { border:0; background:transparent; color:inherit; font-size:1.05rem; cursor:pointer }
