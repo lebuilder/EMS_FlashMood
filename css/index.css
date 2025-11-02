@@ -76,3 +76,50 @@ body.dark-mode .btn-light { background:#1b2b35; color:#e6eef8 }
 body.dark-mode .preview-box pre, body.dark-mode .preview-content { background:#071216; color:#cfe8ff }
 /* Theme toggle button */
 .theme-toggle { border:0; background:transparent; color:inherit; font-size:1.05rem; cursor:pointer }
+
+/* Reglement styling: serious, readable and modern */
+.reglement-card .reg-content {
+    display: block;
+    /* Single-column vertical flow (top-to-bottom) per user request */
+    column-count: 1;
+    column-gap: 0;
+    padding: 0.5rem 0.25rem;
+}
+.reglement-card h3{ 
+    display:block;
+    background: linear-gradient(90deg, rgba(47,158,68,0.95), rgba(18,115,45,0.95));
+    color: #fff;
+    padding:0.45rem 0.75rem;
+    margin:0.5rem 0 0.75rem 0;
+    border-radius:6px;
+    font-size:1rem;
+    box-shadow: 0 6px 18px rgba(2,6,23,0.06);
+}
+.reglement-card p{ 
+    margin:0 0 0.6rem 0; 
+    line-height:1.45; 
+    color:#1b2b2b;
+}
+.reglement-card ul{ margin:0.3rem 0 0.8rem 1.1rem; }
+.reglement-card li{ margin-bottom:0.4rem }
+.reglement-card .conclusion{ 
+    background: #f6f8fa; 
+    border-left:4px solid #2f9e44; 
+    padding:0.6rem 0.8rem; 
+    border-radius:6px; 
+    margin-top:1rem;
+}
+@media (max-width:900px){
+    .reglement-card .reg-content{ column-count:1 }
+    .reglement-card h3{ font-size:1.02rem }
+}
+
+.reg-section { margin-bottom:0.18rem; border-radius:6px; overflow:hidden; }
+.reg-toggle{ width:100%; text-align:left; background:linear-gradient(90deg, rgba(47,158,68,0.95), rgba(18,115,45,0.95)); color:#fff; border:0; padding:0.6rem 0.8rem; font-weight:700; font-size:1rem; display:flex; align-items:center; justify-content:space-between; cursor:pointer; }
+.reg-toggle .chev{ margin-left:0.6rem; transition: transform .25s ease; font-size:0.95rem }
+.reg-body{ background: #fff; color:#1b2b2b; padding:0; max-height:0; overflow:hidden; transition: max-height .32s ease, padding .25s ease; border:1px solid rgba(0,0,0,0.04); border-top:0 }
+.reg-section.open{ margin-bottom:0.8rem; }
+.reg-section.open .reg-body{ max-height: 2000px; padding:0.8rem; }
+.reg-section.open .reg-toggle .chev{ transform: rotate(180deg) }
+
+@media (prefers-reduced-motion: reduce){ .reg-body{ transition:none } }
