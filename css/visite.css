@@ -7,7 +7,27 @@
 .form-control.visite-input { border:1px solid #dcd7d3; border-radius:4px; background:#fbfbfb; }
 .small-input { max-width:120px; }
 .inline-inputs > * { margin-right:0.6rem; }
-.photo-placeholder, .id-placeholder, .workcard-placeholder { height:160px; border:3px dashed #c7b7b2; border-radius:6px; display:flex; align-items:center; justify-content:center; color:#8b7b76; background:linear-gradient(180deg,#fff,#faf7f6); }
+.photo-placeholder, .id-placeholder, .workcard-placeholder { height:160px; border:3px dashed #c7b7b2; border-radius:6px; display:flex; align-items:center; justify-content:center; color:#8b7b76; background:linear-gradient(180deg,#fff,#faf7f6); position:relative; overflow:hidden }
+.photo-placeholder img, .id-placeholder img, .workcard-placeholder img { max-width:100%; max-height:100%; border-radius:4px; object-fit:cover; display:block }
+.image-controls{ margin-top:0.6rem; display:flex; gap:0.5rem; align-items:center }
+.image-hint{ font-size:0.85rem; color:#666 }
+.image-drop-hover{ outline:4px solid rgba(43,26,18,0.12); }
+.image-delete-btn{ background:#f8d7da; color:#842029; border:1px solid #f5c2c7; }
+.image-delete-btn:hover{ background:#f1b0b7 }
+/* overlay delete button on thumbnail */
+.image-overlay-delete{ position:absolute; top:6px; right:6px; background:rgba(0,0,0,0.45); color:#fff; border:0; width:34px; height:34px; border-radius:50%; display:none; align-items:center; justify-content:center; font-weight:700; cursor:pointer; box-shadow:0 2px 6px rgba(0,0,0,0.25); transition:opacity 180ms ease, transform 180ms ease }
+.image-overlay-delete:focus{ outline:2px solid rgba(255,255,255,0.6) }
+.image-overlay-delete:hover{ background:rgba(0,0,0,0.75); transform:scale(1.06) }
+
+/* show overlay only when an image is loaded AND when the user hovers or focuses the placeholder */
+.photo-placeholder:hover img[data-loaded] ~ .image-overlay-delete,
+.photo-placeholder:focus-within img[data-loaded] ~ .image-overlay-delete,
+.id-placeholder:hover img[data-loaded] ~ .image-overlay-delete,
+.id-placeholder:focus-within img[data-loaded] ~ .image-overlay-delete,
+.workcard-placeholder:hover img[data-loaded] ~ .image-overlay-delete,
+.workcard-placeholder:focus-within img[data-loaded] ~ .image-overlay-delete {
+  display:flex; opacity:1;
+}
 .vaccin-checkboxes .form-check { display:inline-block; margin-right:0.8rem; }
 .section-sub { font-size:0.95rem; margin-top:0.5rem; color:#333; }
 .psy-questions textarea { min-height:60px; }

@@ -4,7 +4,8 @@ body {
     font-family: 'Roboto', sans-serif;
     margin: 0;
     min-height: 100vh;
-    background: linear-gradient(rgba(12,34,63,0.55), rgba(12,34,63,0.55)), url('media/bg.jpg') center/cover no-repeat fixed;
+    /* background image path fixed: css file lives in css/ so media is one level up */
+    background: linear-gradient(rgba(12,34,63,0.55), rgba(12,34,63,0.55)), url('../media/bg.jpg') center/cover no-repeat fixed;
     color: #222;
 }
 
@@ -67,7 +68,7 @@ body, .site-navbar, .med-card, .reglement-card, .preview-box, .preview-content, 
 body.dark-mode .copy-badge{ background:#1f6d37 }
 
 /* Dark mode styles */
-body.dark-mode { background: linear-gradient(rgba(2,6,23,0.9), rgba(2,6,23,0.9)), url('media/bg.jpg') center/cover no-repeat fixed; color:#ddd }
+body.dark-mode { background: linear-gradient(rgba(2,6,23,0.9), rgba(2,6,23,0.9)), url('../media/bg.jpg') center/cover no-repeat fixed; color:#ddd }
 body.dark-mode .site-navbar { background:#0f3d26 }
 body.dark-mode .med-card, body.dark-mode .reglement-card, body.dark-mode .preview-box { background: #0f1720; color:#e6eef8 }
 body.dark-mode .form-control { background:#0f1720; color:#e6eef8; border-color: #165f2b }

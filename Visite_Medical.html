@@ -20,7 +20,7 @@
         <nav class="site-navbar">
             <div class="container d-flex align-items-center justify-content-between">
                 <div class="brand">
-                    <img src="./media/logo.png" alt="Logo" onerror="this.style.display='none'">
+                    <!--img src="./media/logo.png" alt="Logo" onerror="this.style.display='none'">-->
                     <div>
                         <div class="title">SAMS</div>
                         <div style="font-size:0.85rem;opacity:0.9">Visite Médicale</div>
@@ -28,7 +28,7 @@
                 </div>
                 <div class="d-flex align-items-center" style="gap:1rem">
                     <a href="index.html" class="text-white mr-3" title="Réglement"><i class="fa fa-book nav-icon" aria-hidden="true"></i>Règlement</a>
-                    <a href="XXX.html" class="text-white mr-3" title="XX"><i class="fa fa-file nav-icon" aria-hidden="true"></i>XX</a>
+                    <a href="psy.html" class="text-white mr-3" title="Psychologist"><i class="fa fa-file nav-icon" aria-hidden="true"></i>Psychologist</a>
                     <button id="themeToggle" class="theme-toggle" aria-label="Basculer thème">🌙</button>
                 </div>
             </div>
@@ -99,13 +99,43 @@
 
                         <div class="col-md-4">
                             <div class="section-title">PHOTO DU PATIENT</div>
-                            <div class="photo-placeholder mt-3">Photo (téléverser)</div>
+                            <div class="photo-placeholder mt-3" id="photoArea" tabindex="0">
+                                <img id="photoPreview" src="" alt="Photo patient" aria-hidden="true">
+                                <button type="button" class="image-overlay-delete" data-target="photo" title="Supprimer l'image" aria-label="Supprimer l'image">×</button>
+                            </div>
+                            <div class="image-controls">
+                                <input id="photoInput" type="file" accept="image/*" style="display:none">
+                                <button type="button" class="btn btn-sm btn-light" data-target="photo">Téléverser</button>
+                                <button id="photoPasteBtn" type="button" class="btn btn-sm btn-light" data-target="photo">Coller (Ctrl+V)</button>
+                                <button id="photoDeleteBtn" type="button" class="btn btn-sm image-delete-btn" data-target="photo">Supprimer</button>
+                                <div class="image-hint">ou glisser-déposer une image</div>
+                            </div>
 
                             <div class="section-title mt-4">CARTE D'IDENTITÉ</div>
-                            <div class="id-placeholder mt-3">Image identité</div>
+                            <div class="id-placeholder mt-3" id="idArea" tabindex="0">
+                                <img id="idPreview" src="" alt="Carte identité" aria-hidden="true">
+                                <button type="button" class="image-overlay-delete" data-target="id" title="Supprimer l'image" aria-label="Supprimer l'image">×</button>
+                            </div>
+                            <div class="image-controls">
+                                <input id="idInput" type="file" accept="image/*" style="display:none">
+                                <button type="button" class="btn btn-sm btn-light" data-target="id">Téléverser</button>
+                                <button id="idPasteBtn" type="button" class="btn btn-sm btn-light" data-target="id">Coller (Ctrl+V)</button>
+                                <button id="idDeleteBtn" type="button" class="btn btn-sm image-delete-btn" data-target="id">Supprimer</button>
+                                <div class="image-hint">ou glisser-déposer une image</div>
+                            </div>
 
                             <div class="section-title mt-4">CARTE DE TRAVAIL</div>
-                            <div class="workcard-placeholder mt-3">Image travail</div>
+                            <div class="workcard-placeholder mt-3" id="workArea" tabindex="0">
+                                <img id="workPreview" src="" alt="Carte travail" aria-hidden="true">
+                                <button type="button" class="image-overlay-delete" data-target="work" title="Supprimer l'image" aria-label="Supprimer l'image">×</button>
+                            </div>
+                            <div class="image-controls">
+                                <input id="workInput" type="file" accept="image/*" style="display:none">
+                                <button type="button" class="btn btn-sm btn-light" data-target="work">Téléverser</button>
+                                <button id="workPasteBtn" type="button" class="btn btn-sm btn-light" data-target="work">Coller (Ctrl+V)</button>
+                                <button id="workDeleteBtn" type="button" class="btn btn-sm image-delete-btn" data-target="work">Supprimer</button>
+                                <div class="image-hint">ou glisser-déposer une image</div>
+                            </div>
                         </div>
                     </div>
 
@@ -263,6 +293,7 @@
                         <button type="button" class="btn btn-light" onclick="window.print()"><i class="fa fa-print"></i> Imprimer</button>
                         <button id="previewBtn" type="button" class="btn btn-info"><i class="fa fa-eye"></i> Prévisualiser</button>
                         <button id="downloadPdf" type="button" class="btn btn-secondary"><i class="fa fa-download"></i> Télécharger PDF</button>
+                        <button id="openPrintable" type="button" class="btn btn-outline-secondary"><i class="fa fa-print"></i> Ouvrir imprimable</button>
                         <button type="submit" class="btn btn-primary">Enregistrer</button>
                     </div>
                     </form>
@@ -273,8 +304,23 @@
         <script src="js/theme.js"></script>
         <script src="js/navbar.js" defer></script>
         <script src="js/index.js"></script>
-        <!-- html2pdf bundle (includes html2canvas and jspdf) -->
+        <!-- html2pdf bundle (includes jsPDF wrapper) -->
         <script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.9.3/html2pdf.bundle.min.js"></script>
+        <!-- explicit jsPDF (UMD) to ensure 'jsPDF' / 'jspdf' constructors are available for fallbacks -->
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+        <script>
+            // Some distributions expose jspdf under window.jspdf (UMD) with .jsPDF constructor.
+            // html2pdf and older code expect window.jsPDF; normalize both names so code can use either.
+            (function(){
+                try{
+                    if(window.jspdf && window.jspdf.jsPDF && !window.jsPDF){ window.jsPDF = window.jspdf.jsPDF; }
+                    // in some builds jspdf exposes window.JSPDF — normalize as well
+                    if(!window.jsPDF && window.JSPDF){ window.jsPDF = window.JSPDF; }
+                }catch(e){ console.warn('jsPDF normalization failed', e); }
+            })();
+        </script>
+        <!-- ensure html2canvas is available (helps fallback and avoids ReferenceError) -->
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
         <script src="js/visite.js" defer></script>
     </body>
 </html>

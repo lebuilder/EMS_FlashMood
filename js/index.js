@@ -2,44 +2,7 @@
    Exposes functions used by inline attributes: add_fait, reset_faits, med, previewMed, copyPreview, avocat, appelDoj, etc.
 */
 
-let peines = [];
 let lastBuiltMed = null;
-
-async function loadCSV(){
-    try{
-        const res = await fetch('code_penal.csv');
-        const text = await res.text();
-        parseCSV(text);
-        populateControls();
-        try{ if (typeof updateDojButtonVisibility === 'function') updateDojButtonVisibility(); }catch(e){}
-    }catch(e){ console.error('Impossible de charger code_penal.csv:', e); const el=document.getElementById('peine_details'); if(el) el.innerText='Erreur de chargement du fichier CSV.'; }
-}
-
-function parseCSV(text){
-    peines = [];
-    const lines = text.split(/\r?\n/).map(l=>l.trim()).filter(l=>l.length);
-    for(const line of lines){
-        if (/^★|^Article|^\/|^;/.test(line)) continue;
-        const parts = line.split(';').map(p=>p.trim()).filter(p=>p.length);
-        if(parts.length===0) continue;
-        const name = parts[0], fine = parts[1]||'', time = parts[2]||'';
-        peines.push({name,fine,time,raw:line});
-    }
-    const seen = new Set();
-    peines = peines.filter(p=>{ if(seen.has(p.name)) return false; seen.add(p.name); return true });
-    peines.sort((a,b)=> a.name.localeCompare(b.name,'fr'));
-}
-
-function populateControls(){ const datalist = document.getElementById('faits_tb'); if(datalist) datalist.innerHTML=''; peines.forEach(p=>{ if(datalist){ const opt=document.createElement('option'); opt.value=p.name; datalist.appendChild(opt); } }); }
-
-function showPeineDetails(value){ if(!value){ const el=document.getElementById('peine_details'); if(el) el.innerText='Aucune peine sélectionnée'; return; } const found = peines.find(p=> p.name.toLowerCase()===value.toLowerCase()); const el=document.getElementById('peine_details'); if(found){ const fine = found.fine? `Amende: ${found.fine}`:'Amende: N/A'; const time = found.time? `Temps: ${found.time}`:'Temps: N/A'; if(el) el.innerText = `${found.name} — ${fine} — ${time}`; } else if(el){ el.innerText = 'Aucune correspondance exacte trouvée dans le CSV.'; } }
-
-function parseTimeToMinutes(s){ if(!s) return 0; s = s.toString(); const m = s.match(/(\d+)\s*mins?/i); if(m) return parseInt(m[1],10); const h = s.match(/(\d+)\s*heures?/i); if(h) return parseInt(h[1],10)*60; const h2 = s.match(/(\d+)\s*h\b/i); if(h2) return parseInt(h2[1],10)*60; return 0; }
-function formatMinutes(total){ const t = Math.max(0, Math.min(60, Number(total) || 0)); const hrs = Math.floor(t / 60); const mins = t % 60; const hh = hrs.toString(); const mm = mins.toString().padStart(2, '0'); return `${hh}h${mm}`; }
-
-function add_fait(){ const val = (document.getElementById('faits')?.value||'').trim(); const errEl = document.getElementById('faits_error'); if(errEl){ errEl.style.display='none'; errEl.innerText=''; } if(!val){ if(errEl){ errEl.innerText='Veuillez choisir ou saisir une peine.'; errEl.style.display='block'; } return; } const found = peines.find(p=> p.name.toLowerCase()===val.toLowerCase()); const container = document.getElementById('add_2'); if(!container) return; const existing = Array.from(container.children).filter(n=> n && (n.dataset?.faitName || n.innerText)).length; if(existing>=3){ if(errEl){ errEl.innerText='Maximum 3 faits autorisés.'; errEl.style.display='block'; } return; } const duplicate = Array.from(container.children).some(n=> n && (n.dataset && n.dataset.faitName) && (n.dataset.faitName.trim().toLowerCase() === val.toLowerCase())); if(duplicate){ if(errEl){ errEl.innerText='Ce fait a déjà été ajouté.'; errEl.style.display='block'; } document.getElementById('faits').value=''; return; } if(container.innerText.includes('Pas de faits')) container.innerHTML=''; const div = document.createElement('div'); div.className='border rounded p-2 mb-2 fact-item'; const nameToShow = found ? found.name : val; div.dataset.faitName = nameToShow; const span = document.createElement('span'); span.className='fact-name'; span.innerText = nameToShow; const btn = document.createElement('button'); btn.type='button'; btn.className='fact-remove'; btn.title='Supprimer ce fait'; btn.innerText='✖'; btn.addEventListener('click', ()=>{ div.remove(); const remaining = Array.from(container.children).filter(n=> n && (n.dataset?.faitName || n.innerText)); if(!remaining.length) container.innerText = 'Pas de faits pour l\'instant'; const e = document.getElementById('faits_error'); if(e){ const nowCount = remaining.length; if(nowCount<3){ e.style.display='none'; e.innerText=''; } } try{ updateDojButtonVisibility(); }catch(e){} }); div.appendChild(span); div.appendChild(btn); container.appendChild(div); document.getElementById('faits').value=''; const pd = document.getElementById('peine_details'); if(pd) pd.innerText='Aucune peine sélectionnée'; try{ updateDojButtonVisibility(); }catch(e){} }
-
-function reset_faits(){ const container = document.getElementById('add_2'); if(container) container.innerText='Pas de faits pour l\'instant'; try{ updateDojButtonVisibility(); }catch(e){} }
 
 function buildMedText(){
     const nom = (document.getElementById('nom')?.value||'').trim();
@@ -50,22 +13,18 @@ function buildMedText(){
     const pad = n=>n.toString().padStart(2,'0');
     const dateStr = `${pad(now.getDate())}/${pad(now.getMonth()+1)}/${now.getFullYear()} à ${pad(now.getHours())}:${pad(now.getMinutes())}`;
 
+    // Simplified: EMS doesn't use the full 'peines' CSV here. Gather any free-text 'faits' if present.
     const faitsContainer = document.getElementById('add_2');
     let faitsList = [];
     if(faitsContainer){
-        if(faitsContainer.innerText && /Pas de faits/i.test(faitsContainer.innerText)){
-            const peineVal = (document.getElementById('faits')?.value||'').trim(); if(peineVal) faitsList.push(peineVal);
-        } else {
-            const children = Array.from(faitsContainer.children).filter(n=> n && (n.dataset?.faitName || n.innerText));
-            if(children.length) faitsList = children.map(c => (c.dataset && c.dataset.faitName) ? c.dataset.faitName.trim() : c.innerText.split('\n')[0].trim());
-            else { const peineVal = (document.getElementById('faits')?.value||'').trim(); if(peineVal) faitsList.push(peineVal); }
-        }
+        const children = Array.from(faitsContainer.children).filter(n=> n && (n.dataset?.faitName || n.innerText));
+        if(children.length) faitsList = children.map(c => (c.dataset && c.dataset.faitName) ? c.dataset.faitName.trim() : c.innerText.split('\n')[0].trim());
+        else { const peineVal = (document.getElementById('faits')?.value||'').trim(); if(peineVal) faitsList.push(peineVal); }
     }
 
-    let totalMinutes = 0; let totalFine = 0; let fineFound=false;
-    faitsList.forEach(f=>{ const p = peines.find(x=> x.name.toLowerCase()===f.toLowerCase()); if(p && p.time) totalMinutes += parseTimeToMinutes(p.time); if(p && p.fine){ const num = parseInt(p.fine.replace(/[^0-9\-]/g,''),10); if(!isNaN(num)){ totalFine+=num; fineFound=true; } } });
-
-    const tempsDetention = formatMinutes(totalMinutes); const amende = fineFound ? (totalFine+'$') : '';
+    // No fine/time calculations in EMS-only mode
+    const tempsDetention = '';
+    const amende = '';
     const providedId = (document.getElementById('id_individu')?.value||'').trim();
     const medInput = (document.getElementById('med_link')?.value||'').trim();
     let uniq;
@@ -76,7 +35,8 @@ function buildMedText(){
     txt+=delim+'\n'; txt+=`:calendar_spiral: Date: ${dateStr}\n`; txt+=`:bust_in_silhouette: Nom du suspect : ${nom}\n`; txt+=`:incoming_envelope: Email du suspect : ${mail}\n`; txt+=`:hourglass_flowing_sand: Temps de la détention : ${tempsDetention}\n`;
     if(faitsList.length){ txt+=`:book: Faits :\n`; faitsList.forEach(f=> txt+= '- ' + (f||'').replace(/\r?\n/g,' ').trim() + '\n'); } else { const peineVal = (document.getElementById('faits')?.value||'').trim(); txt+=`:book: Faits : ${peineVal}\n`; }
     txt+=`:dollar: Amende :  ${amende}\n`; txt+=`:briefcase: Biens personnels saisis : ${objets}\n`; txt+=`:school_satchel: Biens personnels à rendre : Biens personnels\n`;
-    const avocatChecked = document.getElementById('avocat_checkbox')?.checked; txt+=`:man_student: Avocat : ${avocatChecked ? 'Oui' : 'Non'}\n`; txt+=`:scales: Comparution : Non\n`; txt+=`:envelope: ID unique de l\'individu : ${uniq}\n`; txt+=`:man_police_officer: Clôturé par : ${agents}\n`; txt+=delim+'\n';
+    // removed avocat checkbox traces for EMS-only build
+    txt+=`:envelope: ID unique de l\'individu : ${uniq}\n`; txt+=`:man_police_officer: Clôturé par : ${agents}\n`; txt+=delim+'\n';
     const meta = { suspectName: nom||'', med_link: (document.getElementById('med_link')?.value||'').trim(), faitsList, amende, tempsDetention: tempsDetention, matricule: (document.getElementById('matricule')?.value||'').trim(), poste: (document.getElementById('poste')?.value||'').trim(), agents, uniqueId: uniq };
     return { text: txt, meta }
 }
@@ -102,7 +62,7 @@ function formatMedHtml(res){
     if(Array.isArray(m.faitsList) && m.faitsList.length){ lines.push('<div><strong>📚 Faits :</strong></div>'); lines.push('<ul>'); m.faitsList.forEach(f=> lines.push('<li>'+escapeHtml(f)+'</li>')); lines.push('</ul>'); }
     lines.push('<div><strong>💰 Amende :</strong> ' + escapeHtml(m.amende||'') + '</div>');
     lines.push('<div><strong>💼 Objets saisis :</strong> ' + escapeHtml(document.getElementById('objetsSaisis')?.value||'') + '</div>');
-    lines.push('<div><strong>👨‍⚖️ Avocat :</strong> ' + (document.getElementById('avocat_checkbox')?.checked ? 'Oui' : 'Non') + '</div>');
+    // Avocat info removed for EMS-only build
     lines.push('<div><strong>📎 Lien M.E.D :</strong> ' + (m.med_link ? ('<a href="'+escapeHtml(m.med_link)+'" target="_blank" rel="noreferrer">'+escapeHtml(m.med_link)+'</a>') : '') + '</div>');
     lines.push('<div style="margin-top:.5rem;color:#666;font-size:.85rem">ID: ' + escapeHtml(m.matricule||'') + ' · Poste: ' + escapeHtml(m.poste||'') + '</div>');
     lines.push('</div>');
@@ -111,13 +71,8 @@ function formatMedHtml(res){
 
 function showCopyBadge(msg){ try{ const b = document.getElementById('copyBadge'); if(!b) return; b.innerText = msg||'Copié'; b.style.display='block'; b.style.opacity='1'; b.style.transition=''; setTimeout(()=>{ b.style.transition='opacity .35s ease'; b.style.opacity='0'; setTimeout(()=>{ b.style.display='none'; }, 350); }, 1400); }catch(e){} }
 
-function avocat(){ const matricule = (document.getElementById('agents')?.value||'').trim(); const nom = (document.getElementById('nom')?.value||'').trim(); const poste = (document.getElementById('poste')?.value||'Vespucci').trim(); const now = new Date(); const pad=n=>n.toString().padStart(2,'0'); const dateStr = `${pad(now.getDate())}/${pad(now.getMonth()+1)}/${now.getFullYear()} à ${pad(now.getHours())}:${pad(now.getMinutes())}`; const delim='▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬'; let txt=''; txt+=delim+'\n'; txt+= '👮🏻 Matricule: ' + matricule + '\n'; txt+= '🗓️ Date: ' + dateStr + '\n'; txt+= '🙎‍♂️ Nom et prénom du suspect: ' + nom + '\n'; txt+= '🎓 Demande: @Avocat' + '\n'; txt+= '📍 Poste de Police: ' + poste + '\n'; txt+=delim+'\n'; copyText(txt).then(()=> alert('Message avocat copié dans le presse-papiers.')).catch(()=> alert('Échec de copie.')); }
 
-function appelDoj(){ const poste = (document.getElementById('poste')?.value||'Vespucci').trim(); const medLink = (document.getElementById('med_link')?.value||'').trim(); let txt=''; const header='===================================================='; txt+=header+'\n'; txt+='Courrier à destination de : @👩🏻‍⚖️ | Juge  @⚖️ | Procureur @🎓Officier Police Judiciaire\n'; txt+=header+'\n\n'; txt+='Bonjour,\n\n'; txt+='Votre présence est mandatée. Merci de vous présenter aux cellules du poste de '+poste+'.\n\n'; txt+='Bien à vous,\n\n'; txt+='📚Lien de la M.E.D:\n'+medLink+'\n'; copyText(txt).then(()=> alert('Courrier DOj copié dans le presse-papiers.')).catch(()=> alert('Échec de copie.')); }
-
-function updateDojButtonVisibility(){ try{ const btn = document.getElementById('btn_doj_call'); if(!btn) return; const faitsContainer = document.getElementById('add_2'); let faitsList=[]; if(faitsContainer){ if(faitsContainer.innerText && /Pas de faits/i.test(faitsContainer.innerText)){ const peineVal = (document.getElementById('faits')?.value||'').trim(); if(peineVal) faitsList.push(peineVal); } else { const children = Array.from(faitsContainer.children).filter(n=> n && (n.dataset?.faitName || n.innerText)); if(children.length) faitsList = children.map(c=> (c.dataset && c.dataset.faitName) ? c.dataset.faitName.trim() : c.innerText.split('\n')[0].trim()); else { const peineVal = (document.getElementById('faits')?.value||'').trim(); if(peineVal) faitsList.push(peineVal); } } } let hasCrime=false; for(const f of faitsList){ const p = peines.find(x=> x.name.toLowerCase()===f.toLowerCase()); if(p && /crime/i.test(p.raw||p.name||'')){ hasCrime=true; break; } if(p && /peine fédérale/i.test(p.raw||p.name||'')){ hasCrime=true; break; } } btn.style.display = hasCrime ? '' : 'none'; }catch(e){ console.error('updateDojButtonVisibility error', e); } }
-
-function toggleAvocatControls(){ const checked = document.getElementById('avocat_checkbox')?.checked; const btn = document.getElementById('btn_avocat_call'); const medGroup = document.getElementById('med_link_group'); const posteGroup = document.getElementById('poste_group'); if(btn) btn.style.display = checked ? '' : 'none'; if(medGroup) medGroup.style.display = checked ? '' : 'none'; if(posteGroup) posteGroup.style.display = checked ? '' : 'none'; }
+// toggleAvocatControls removed for EMS-only build
 
 function previewMed(){ const res = buildMedText(); lastBuiltMed = res; const content = document.getElementById('previewHtml'); if(content) content.innerHTML = formatMedHtml(res); const overlay = document.getElementById('previewOverlay'); if(overlay) overlay.style.display = 'flex'; }
 
@@ -127,10 +82,7 @@ function closePreview(){ const overlay = document.getElementById('previewOverlay
 
 // small helpers for UI bindings
 document.addEventListener('DOMContentLoaded', ()=>{
-    try{ loadCSV(); }catch(e){}
-    try{ const fi = document.getElementById('faits'); if(fi) fi.addEventListener('input', ()=>{ const e = document.getElementById('faits_error'); if(e){ e.style.display='none'; e.innerText=''; } }); }catch(e){}
-    try{ const fi2 = document.getElementById('fait_input'); if(fi2) fi2.addEventListener('input', ()=>{ const e = document.getElementById('faits_error'); if(e){ e.style.display='none'; e.innerText=''; } }); }catch(e){}
-    try{ const avocatCheckbox = document.getElementById('avocat_checkbox'); if(avocatCheckbox) avocatCheckbox.addEventListener('change', toggleAvocatControls); toggleAvocatControls(); }catch(e){}
+    // No CSV or "faits" controls in EMS-only index. Wire up regulation toggles only.
     try{
         // Wire collapsible regulation sections (buttons with class .reg-toggle)
         const toggles = document.querySelectorAll('.reg-toggle');
@@ -167,13 +119,6 @@ document.addEventListener('DOMContentLoaded', ()=>{
 });
 
 // expose globals used by HTML onclick attributes
-window.add_fait = add_fait;
-window.reset_faits = reset_faits;
 window.med = med;
 window.previewMed = previewMed;
 window.copyPreview = copyPreview;
-window.avocat = avocat;
-window.appelDoj = appelDoj;
-window.showPeineDetails = showPeineDetails;
-window.updateDojButtonVisibility = updateDojButtonVisibility;
-window.toggleAvocatControls = toggleAvocatControls;
