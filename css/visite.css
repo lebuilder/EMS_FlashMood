@@ -1,0 +1,31 @@
+/* Styles for Visite Médicale card */
+.visite-card { background: #fff; border-radius: 8px; padding: 1.25rem; box-shadow: 0 6px 18px rgba(0,0,0,0.06); }
+.visite-card h2 { font-weight:700; margin-bottom:0.6rem; }
+.visite-section { margin:1rem 0; }
+.visite-section .section-title { display:inline-block; background:#6b2f1f; color:#fff; padding:0.45rem 0.8rem; border-radius:3px; font-weight:700; margin-bottom:0.8rem; }
+.form-row .label { font-weight:700; font-size:0.9rem; }
+.form-control.visite-input { border:1px solid #dcd7d3; border-radius:4px; background:#fbfbfb; }
+.small-input { max-width:120px; }
+.inline-inputs > * { margin-right:0.6rem; }
+.photo-placeholder, .id-placeholder, .workcard-placeholder { height:160px; border:3px dashed #c7b7b2; border-radius:6px; display:flex; align-items:center; justify-content:center; color:#8b7b76; background:linear-gradient(180deg,#fff,#faf7f6); }
+.vaccin-checkboxes .form-check { display:inline-block; margin-right:0.8rem; }
+.section-sub { font-size:0.95rem; margin-top:0.5rem; color:#333; }
+.psy-questions textarea { min-height:60px; }
+.form-actions { display:flex; gap:0.6rem; justify-content:flex-end; margin-top:1rem; }
+
+/* print styling */
+@media print{
+  body{background:#fff}
+  .site-navbar{display:none}
+  .form-actions{display:none}
+  .visite-card{box-shadow:none}
+}
+
+/* Preview modal styles */
+.pdf-preview-overlay{
+  position:fixed;inset:0;background:rgba(0,0,0,0.55);display:flex;align-items:center;justify-content:center;z-index:1100;padding:1rem;
+}
+.pdf-preview-dialog{background:#fff;border-radius:8px;max-width:900px;width:100%;max-height:90vh;overflow:auto;padding:1rem;box-shadow:0 10px 30px rgba(0,0,0,0.35)}
+.pdf-preview-actions{display:flex;gap:0.5rem;justify-content:flex-end;margin-bottom:0.6rem}
+.pdf-preview-close{position:absolute;right:12px;top:12px;background:#fff;border:0;border-radius:4px;padding:6px 8px;cursor:pointer}
+

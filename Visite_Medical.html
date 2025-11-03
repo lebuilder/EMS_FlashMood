@@ -9,6 +9,7 @@
         <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;700&display=swap" rel="stylesheet">
         <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
     <link rel="stylesheet" href="css/index.css">
+    <link rel="stylesheet" href="css/visite.css">
     <link rel="stylesheet" href="css/navbar-anim.css">
         <title>SAMS </title>
         <meta name="theme-color" content="#2f9e44">
@@ -34,12 +35,237 @@
         </nav>
 
         <div class="page-wrapper">
-            <section id="sectionMED" class="med-card">
-                <div class="row">
-                    <div class="col-12 p-3">
-                        <h2>Visite Médicale</h2>
-                        <p>Future card de visite médicale</p>
+            <section id="sectionMED" class="visite-card">
+                <div class="container-fluid">
+                    <div class="row">
+                        <div class="col-12 p-2">
+                            <h2>Visite Médicale</h2>
+                        </div>
                     </div>
+
+                    <form id="visiteForm">
+                    <div class="row visite-section">
+                        <div class="col-md-8">
+                            <div class="section-title">INFORMATIONS PERSONNELLES</div>
+                            <div class="form-row mt-3">
+                                <div class="col-sm-6 mb-2">
+                                    <label class="label">Nom</label>
+                                    <input type="text" name="nom" class="form-control visite-input" placeholder="Nom">
+                                </div>
+                                <div class="col-sm-6 mb-2">
+                                    <label class="label">Prénom</label>
+                                    <input type="text" name="prenom" class="form-control visite-input" placeholder="Prénom">
+                                </div>
+                                <div class="col-sm-4 mb-2">
+                                    <label class="label">Date de naissance</label>
+                                    <input type="date" name="dob" class="form-control visite-input small-input">
+                                </div>
+                                <div class="col-sm-4 mb-2">
+                                    <label class="label">N° de téléphone</label>
+                                    <input type="tel" name="phone" class="form-control visite-input" placeholder="06 00 00 00 00">
+                                </div>
+                                <div class="col-sm-4 mb-2">
+                                    <label class="label">ID / Matricule</label>
+                                    <input type="text" name="id" class="form-control visite-input" placeholder="ID">
+                                </div>
+
+                                <div class="col-12 mb-2">
+                                    <label class="label">Adresse</label>
+                                    <input type="text" name="address" class="form-control visite-input" placeholder="Adresse complète">
+                                </div>
+
+                                <div class="col-12 mb-2">
+                                    <label class="label">Situation</label>
+                                    <div class="form-check form-check-inline">
+                                        <input class="form-check-input" type="radio" name="situation" id="sit1" value="celibataire">
+                                        <label class="form-check-label" for="sit1">Célibataire</label>
+                                    </div>
+                                    <div class="form-check form-check-inline">
+                                        <input class="form-check-input" type="radio" name="situation" id="sit2" value="encouple">
+                                        <label class="form-check-label" for="sit2">En couple</label>
+                                    </div>
+                                    <div class="form-check form-check-inline">
+                                        <input class="form-check-input" type="radio" name="situation" id="sit3" value="marie">
+                                        <label class="form-check-label" for="sit3">Marié(e)</label>
+                                    </div>
+                                </div>
+
+                                <div class="col-12 mb-2">
+                                    <label class="label">Métier</label>
+                                    <input type="text" name="job" class="form-control visite-input" placeholder="Métier">
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="col-md-4">
+                            <div class="section-title">PHOTO DU PATIENT</div>
+                            <div class="photo-placeholder mt-3">Photo (téléverser)</div>
+
+                            <div class="section-title mt-4">CARTE D'IDENTITÉ</div>
+                            <div class="id-placeholder mt-3">Image identité</div>
+
+                            <div class="section-title mt-4">CARTE DE TRAVAIL</div>
+                            <div class="workcard-placeholder mt-3">Image travail</div>
+                        </div>
+                    </div>
+
+                    <div class="row visite-section">
+                        <div class="col-md-6">
+                            <div class="section-title">CONTACT D'URGENCE</div>
+                            <div class="form-row mt-3">
+                                <div class="col-6 mb-2">
+                                    <label class="label">Nom</label>
+                                    <input type="text" name="em_name" class="form-control visite-input">
+                                </div>
+                                <div class="col-6 mb-2">
+                                    <label class="label">Prénom</label>
+                                    <input type="text" name="em_prenom" class="form-control visite-input">
+                                </div>
+                                <div class="col-6 mb-2">
+                                    <label class="label">N° de téléphone</label>
+                                    <input type="tel" name="em_phone" class="form-control visite-input">
+                                </div>
+                                <div class="col-6 mb-2">
+                                    <label class="label">Adresse</label>
+                                    <input type="text" name="em_address" class="form-control visite-input">
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="col-md-6">
+                            <div class="section-title">INFORMATION MÉDICALE</div>
+                            <div class="form-row mt-3">
+                                <div class="col-4 mb-2">
+                                    <label class="label">Taille (cm)</label>
+                                    <input type="number" name="taille" class="form-control visite-input small-input">
+                                </div>
+                                <div class="col-4 mb-2">
+                                    <label class="label">Poids (kg)</label>
+                                    <input type="number" name="poids" class="form-control visite-input small-input">
+                                </div>
+                                <div class="col-4 mb-2">
+                                    <label class="label">Groupe sanguin</label>
+                                    <input type="text" name="groupe" class="form-control visite-input small-input" placeholder="A+, O-, etc.">
+                                </div>
+
+                                <div class="col-6 mb-2">
+                                    <label class="label">Allergies</label>
+                                    <input type="text" name="allergie" class="form-control visite-input">
+                                </div>
+                                <div class="col-6 mb-2">
+                                    <label class="label">Traitement</label>
+                                    <input type="text" name="traitement" class="form-control visite-input">
+                                </div>
+
+                                <div class="col-6 mb-2">
+                                    <label class="label">Tabagisme</label>
+                                    <input type="text" name="tabac" class="form-control visite-input" placeholder="Oui / Non / Quantité">
+                                </div>
+                                <div class="col-6 mb-2">
+                                    <label class="label">Consommation alcool/drogue</label>
+                                    <input type="text" name="alcool" class="form-control visite-input" placeholder="Détails">
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="row visite-section">
+                        <div class="col-12">
+                            <div class="section-title">VACCINS</div>
+                            <div class="vaccin-checkboxes mt-3">
+                                <div class="form-check form-check-inline">
+                                    <input class="form-check-input" type="checkbox" id="vac1" value="tetanos">
+                                    <label class="form-check-label" for="vac1">Tétanos</label>
+                                </div>
+                                <div class="form-check form-check-inline">
+                                    <input class="form-check-input" type="checkbox" id="vac2" value="diphterie">
+                                    <label class="form-check-label" for="vac2">Diphtérie</label>
+                                </div>
+                                <div class="form-check form-check-inline">
+                                    <input class="form-check-input" type="checkbox" id="vac3" value="coqueluche">
+                                    <label class="form-check-label" for="vac3">Coqueluche</label>
+                                </div>
+                                <div class="form-check form-check-inline">
+                                    <input class="form-check-input" type="checkbox" id="vac4" value="polio">
+                                    <label class="form-check-label" for="vac4">Poliomyélite</label>
+                                </div>
+                            </div>
+                            <div class="form-row mt-3">
+                                <div class="col-12">
+                                    <label class="label">Notes</label>
+                                    <textarea name="vaccin_notes" class="form-control visite-input" rows="2"></textarea>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="row visite-section">
+                        <div class="col-md-6">
+                            <div class="section-title">TESTS MÉDICAUX</div>
+                            <div class="form-row mt-3">
+                                <div class="col-6 mb-2">
+                                    <label class="label">Tension artérielle</label>
+                                    <input type="text" name="tension" class="form-control visite-input" placeholder="mmHg">
+                                </div>
+                                <div class="col-6 mb-2">
+                                    <label class="label">Saturation en O2</label>
+                                    <input type="text" name="saturation" class="form-control visite-input" placeholder="%">
+                                </div>
+
+                                <div class="col-12 mb-2">
+                                    <label class="label">Dépistage visuel</label>
+                                    <input type="text" name="depistage" class="form-control visite-input" placeholder="Droite / Gauche">
+                                </div>
+
+                                <div class="col-12 mb-2">
+                                    <label class="label">Test auditif</label>
+                                    <input type="text" name="auditif" class="form-control visite-input" placeholder="Droite / Gauche">
+                                </div>
+
+                                <div class="col-6 mb-2">
+                                    <label class="label">Fréquence cardiaque (avant)</label>
+                                    <input type="text" name="fc_avant" class="form-control visite-input" placeholder="bpm">
+                                </div>
+                                <div class="col-6 mb-2">
+                                    <label class="label">Fréquence cardiaque (après)</label>
+                                    <input type="text" name="fc_apres" class="form-control visite-input" placeholder="bpm">
+                                </div>
+
+                                <div class="col-12 mb-2">
+                                    <label class="label">Notes</label>
+                                    <textarea name="tests_notes" class="form-control visite-input" rows="2"></textarea>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="col-md-6">
+                            <div class="section-title">BILAN PSYCHOLOGIQUE</div>
+                            <div class="psy-questions mt-3">
+                                <label class="section-sub">1 - Avez-vous des antécédents médicaux ou chirurgicaux ?</label>
+                                <textarea name="psy_q1" class="form-control visite-input" rows="2"></textarea>
+
+                                <label class="section-sub mt-2">2 - Avez-vous des habitudes de sommeil régulières ? Rencontrez-vous des problèmes de sommeil ?</label>
+                                <textarea name="psy_q2" class="form-control visite-input" rows="2"></textarea>
+
+                                <label class="section-sub mt-2">3 - Avez-vous été témoin d'événements traumatisants ?</label>
+                                <textarea name="psy_q3" class="form-control visite-input" rows="2"></textarea>
+
+                                <label class="section-sub mt-2">4 - Comment gérez-vous le stress au quotidien ?</label>
+                                <textarea name="psy_q4" class="form-control visite-input" rows="2"></textarea>
+
+                                <label class="section-sub mt-2">5 - Compte rendu de la vie du patient</label>
+                                <textarea name="psy_q5" class="form-control visite-input" rows="2"></textarea>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="form-actions">
+                        <button type="button" class="btn btn-light" onclick="window.print()"><i class="fa fa-print"></i> Imprimer</button>
+                        <button id="previewBtn" type="button" class="btn btn-info"><i class="fa fa-eye"></i> Prévisualiser</button>
+                        <button id="downloadPdf" type="button" class="btn btn-secondary"><i class="fa fa-download"></i> Télécharger PDF</button>
+                        <button type="submit" class="btn btn-primary">Enregistrer</button>
+                    </div>
+                    </form>
                 </div>
             </section>
         </div>
@@ -47,5 +273,8 @@
         <script src="js/theme.js"></script>
         <script src="js/navbar.js" defer></script>
         <script src="js/index.js"></script>
+        <!-- html2pdf bundle (includes html2canvas and jspdf) -->
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.9.3/html2pdf.bundle.min.js"></script>
+        <script src="js/visite.js" defer></script>
     </body>
 </html>

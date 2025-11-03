@@ -24,3 +24,24 @@
   .animate-page .page-wrapper, .reg-section.open .reg-body { animation: none !important }
   .site-navbar a::after { transition: none }
 }
+
+/* Mobile responsive tweaks: stack navbar, enlarge touch targets */
+@media (max-width: 768px) {
+  .site-navbar .container { flex-direction: column; align-items: flex-start; gap: 0.5rem; }
+  .site-navbar .brand { width:100%; display:flex; align-items:center; justify-content:flex-start; gap:0.6rem }
+  .site-navbar .brand img { height:36px }
+  .site-navbar .d-flex { width:100%; display:flex; flex-wrap:wrap; gap:0.5rem }
+  .site-navbar a { display:inline-flex; padding:0.45rem 0.6rem; border-radius:6px; width:auto }
+  .site-navbar a{ font-size:0.95rem }
+  .site-navbar .nav-icon{ margin-right:0.5rem }
+  .page-wrapper { padding:1rem; }
+  .med-card, .reglement-card { margin:0.6rem; padding:0.9rem }
+  .reg-toggle { padding:0.55rem 0.6rem }
+}
+
+@media (max-width: 420px) {
+  .site-navbar .d-flex { gap:0.35rem }
+  .site-navbar a { width:100%; justify-content:flex-start }
+  .site-navbar .title { font-size:1rem }
+  .med-card, .reglement-card { padding:0.65rem }
+}

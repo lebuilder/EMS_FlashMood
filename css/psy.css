@@ -1,0 +1,32 @@
+/* Styles specific to psy.html (selection summary) */
+.psy-card#summarySection {
+  display: none;
+  margin-top: 1rem;
+}
+
+#summaryContent {
+  background: #f7f7f9;
+  border-radius: 6px;
+  min-height: 60px;
+  padding: 0.75rem;
+}
+
+/* Make the injected select column narrow and centered */
+table.psy-table th.select-col,
+table.psy-table td.select-col {
+  width: 48px;
+  text-align: center;
+}
+
+/* Small card style for each generated item */
+.psy-summary-item {
+  padding: 0.6rem;
+  border-radius: 6px;
+  background: #fff;
+  border: 1px solid rgba(0,0,0,0.04);
+}
+
+/* Responsive: ensure summary fits on small screens */
+@media (max-width: 480px){
+  #summaryContent { font-size: 0.95rem; }
+}
