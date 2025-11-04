@@ -365,10 +365,10 @@
       const overlay = document.createElement('div'); overlay.className = 'pdf-preview-overlay'; overlay.id = 'pdfPreviewOverlay';
       const dialog = document.createElement('div'); dialog.className = 'pdf-preview-dialog';
 
-      const actions = document.createElement('div'); actions.className = 'pdf-preview-actions';
-      const btnDownload = document.createElement('button'); btnDownload.className = 'btn btn-secondary'; btnDownload.innerHTML = '<i class="fa fa-download"></i> Télécharger PDF';
-      const btnClose = document.createElement('button'); btnClose.className = 'btn btn-light'; btnClose.textContent = 'Fermer';
-      actions.appendChild(btnClose); actions.appendChild(btnDownload);
+  const actions = document.createElement('div'); actions.className = 'pdf-preview-actions';
+  // Only show a close button in the preview — do NOT show a download button here
+  const btnClose = document.createElement('button'); btnClose.className = 'btn btn-light'; btnClose.textContent = 'Fermer';
+  actions.appendChild(btnClose);
 
       dialog.appendChild(actions);
       // put the cloned card inside dialog
@@ -377,10 +377,7 @@
       overlay.appendChild(dialog);
       document.body.appendChild(overlay);
 
-      // download from the preview (use the same generator)
-      btnDownload.addEventListener('click', ()=>{
-        generatePdfFromCard(clone);
-      });
+
 
       btnClose.addEventListener('click', ()=>{ removeOverlay(); });
       document.addEventListener('keydown', onKeyDown);

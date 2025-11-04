@@ -1,5 +1,5 @@
 /* Styles for Visite Médicale card */
-.visite-card { background: #ffffff; border-radius: 8px; padding: 1.25rem; box-shadow: 0 8px 22px rgba(12,34,63,0.06); }
+.visite-card { background: #ffffff; border-radius: 8px; padding: 1.25rem; box-shadow: 0 8px 22px rgba(12,34,63,0.06); position:relative; }
 .visite-card h2 { font-weight:700; margin-bottom:0.6rem; }
 .visite-section { margin:1rem 0; }
 .visite-section .section-title { display:inline-block; background: linear-gradient(90deg, rgba(13,110,253,0.95) 0%, rgba(255,122,179,0.95) 100%); color:#fff; padding:0.45rem 0.8rem; border-radius:6px; font-weight:700; margin-bottom:0.8rem; box-shadow: 0 6px 18px rgba(13,110,253,0.06); }
@@ -59,6 +59,21 @@ body.dark-mode .photo-placeholder, body.dark-mode .id-placeholder, body.dark-mod
 .pdf-preview-close{position:absolute;right:12px;top:12px;background:#fff;border:0;border-radius:4px;padding:6px 8px;cursor:pointer}
 .photo-placeholder img{ width:100%; height:200px; object-fit:cover; border-radius:8px }
 
+/* Hide interactive controls while showing the PDF preview overlay */
+.pdf-preview-overlay .form-actions,
+.pdf-preview-overlay .image-controls,
+.pdf-preview-overlay .image-overlay-delete {
+  display: none !important;
+}
+
+/* Also specifically hide the download button inside preview overlays (covering different preview wrappers) */
+.pdf-preview-overlay #downloadPdf,
+.pdf-preview-dialog #downloadPdf,
+.pdf-preview-overlay button[id^="download"],
+.pdf-preview-dialog button[id^="download"] {
+  display: none !important;
+}
+
 /* VISITE MEDICALE custom header (brown theme) */
 .card-header-visite{ display:flex; align-items:center; gap:1rem; margin-bottom:1rem }
 .card-header-left{ width:240px; display:flex; align-items:center; justify-content:center }
@@ -92,4 +107,8 @@ body.dark-mode .visite-form label.label{ color: #ff7ab3 }
 
 /* Make the overall card wider and with more internal spacing to show all text */
 .visite-card{ max-width:980px; margin:1.25rem auto; padding:1.5rem; }
+
+/* single close button placed bottom-right inside the card */
+.visite-card .close-card-btn{ position:absolute; right:16px; bottom:16px; z-index:5 }
+.visite-card .close-card-btn.btn{ padding:8px 12px }
 
