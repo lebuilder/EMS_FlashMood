@@ -1,7 +1,3 @@
-/* Per-page JS extracted from index.html
-   Exposes functions used by inline attributes: add_fait, reset_faits, med, previewMed, copyPreview, avocat, appelDoj, etc.
-*/
-
 let lastBuiltMed = null;
 
 function buildMedText(){

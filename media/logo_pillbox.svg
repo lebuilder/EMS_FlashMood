@@ -1,0 +1,48 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- PillBox logo updated: badge + heart overlay -->
+<svg xmlns="http://www.w3.org/2000/svg" width="320" height="120" viewBox="0 0 320 120" role="img" aria-label="PillBox logo">
+  <defs>
+    <linearGradient id="g1" x1="0" x2="1">
+      <stop offset="0%" stop-color="#073763"/>
+      <stop offset="60%" stop-color="#0b63a3"/>
+      <stop offset="100%" stop-color="#ff7ab3"/>
+    </linearGradient>
+    <filter id="shadow" x="-20%" y="-20%" width="140%" height="140%">
+      <feDropShadow dx="0" dy="4" stdDeviation="8" flood-color="#0b63a3" flood-opacity="0.18"/>
+    </filter>
+  </defs>
+
+  <!-- rounded background -->
+  <rect width="320" height="120" rx="16" fill="url(#g1)" filter="url(#shadow)"/>
+
+  <!-- left badge (white translucent shapes for depth) -->
+  <g transform="translate(16,12)">
+    <rect x="0" y="0" width="96" height="96" rx="12" fill="#fff" opacity="0.06"/>
+    <circle cx="48" cy="48" r="28" fill="#fff" opacity="0.08" />
+    <!-- small medical cross inside circle -->
+    <g transform="translate(32,30)">
+      <rect x="14" y="0" width="12" height="36" rx="3" fill="#fff"/>
+      <rect x="0" y="14" width="36" height="12" rx="3" fill="#fff"/>
+    </g>
+  </g>
+
+  <!-- main text -->
+  <g transform="translate(122,34)">
+    <text x="0" y="26" font-family="Roboto, Arial, sans-serif" font-size="28" fill="#fff" font-weight="700">PillBox</text>
+    <text x="0" y="52" font-family="Roboto, Arial, sans-serif" font-size="12" fill="#fff" opacity="0.95">Service Médical — SAMS</text>
+  </g>
+
+  <!-- heart badge (top-right) -->
+  <g transform="translate(240,10)" aria-hidden="true">
+    <circle cx="36" cy="24" r="26" fill="#ff6b8a" />
+    <path d="M36 16
+             C32 9, 24 10, 24 20
+             C24 32, 36 42, 36 42
+             C36 42, 48 32, 48 20
+             C48 10, 40 9, 36 16 Z"
+          fill="#fff" transform="translate(-0,-2)"/>
+  </g>
+
+  <!-- subtle border -->
+  <rect x="1" y="1" width="318" height="118" rx="16" ry="16" fill="none" stroke="rgba(255,255,255,0.06)" />
+</svg>

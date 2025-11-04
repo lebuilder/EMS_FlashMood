@@ -1,20 +1,15 @@
-/* Extracted from index.html - layout, navbar, med-card, preview modal, dark-mode, transitions */
-/* Layout & fonts */
 body {
     font-family: 'Roboto', sans-serif;
     margin: 0;
     min-height: 100vh;
-    /* background image path fixed: css file lives in css/ so media is one level up */
-    background: linear-gradient(rgba(12,34,63,0.55), rgba(12,34,63,0.55)), url('../media/bg.jpg') center/cover no-repeat fixed;
     color: #222;
 }
 
-/* Navbar styling */
 .site-navbar {
-    background: #2f9e44;
+    background: linear-gradient(90deg, #073763 0%, #0b63a3 60%, #ff7ab3 100%);
     color: #fff;
     padding: 0.5rem 1rem;
-    box-shadow: 0 2px 6px rgba(0,0,0,0.2);
+    box-shadow: 0 4px 14px rgba(11,99,163,0.18);
 }
 .site-navbar .brand { display:flex; align-items:center; gap:0.75rem; }
 .site-navbar img { height:44px; width:auto; border-radius:4px; background:#fff; padding:2px }
@@ -24,10 +19,12 @@ body {
 .page-wrapper { display:flex; align-items:flex-start; justify-content:center; padding:2.25rem 1rem; }
 .med-card, .reglement-card {
     width:100%;
-    max-width:980px;
-    background: rgba(255,255,255,0.95);
-    border-radius:10px;
-    box-shadow: 0 10px 30px rgba(2,6,23,0.35);
+    max-width:1100px;
+    /* white cards so content is readable */
+    background: #ffffff;
+    border: 1px solid rgba(0,0,0,0.06);
+    border-radius:12px;
+    box-shadow: 0 8px 22px rgba(12,34,63,0.06);
     padding:1.25rem;
     margin: 1rem;
 }
@@ -69,8 +66,18 @@ body.dark-mode .copy-badge{ background:#1f6d37 }
 
 /* Dark mode styles */
 body.dark-mode { background: linear-gradient(rgba(2,6,23,0.9), rgba(2,6,23,0.9)), url('../media/bg.jpg') center/cover no-repeat fixed; color:#ddd }
-body.dark-mode .site-navbar { background:#0f3d26 }
-body.dark-mode .med-card, body.dark-mode .reglement-card, body.dark-mode .preview-box { background: #0f1720; color:#e6eef8 }
+/* keep the DA gradient in dark-mode but slightly deeper for contrast */
+body.dark-mode .site-navbar { background: linear-gradient(90deg, #03243b 0%, #0b3e6a 60%, #8b2a56 100%); }
+/* Dark mode: make cards dark but keep form inputs readable (light) */
+/* Softer dark card background so content remains readable (not pure black) */
+body.dark-mode .med-card, body.dark-mode .reglement-card, body.dark-mode .preview-box { background: #0b1220; color:#dfe8f6 }
+/* psy page card dark-mode */
+body.dark-mode .psy-card { background: #0b1220; color:#dfe8f6 }
+body.dark-mode .psy-card .form-control { background:#ffffff; color:#111 }
+/* keep inputs light inside cards so they remain readable */
+/* keep inputs light inside cards so they remain readable */
+body.dark-mode .med-card .form-control, body.dark-mode .reglement-card .form-control { background:#ffffff; color:#111; border-color:#dcd7d3 }
+/* global form-control in other contexts can still be dark */
 body.dark-mode .form-control { background:#0f1720; color:#e6eef8; border-color: #165f2b }
 body.dark-mode .btn-primary { background:#1f7a3a; border-color:#165f2b }
 body.dark-mode .btn-light { background:#1b2b35; color:#e6eef8 }
@@ -89,15 +96,27 @@ body.dark-mode .preview-box pre, body.dark-mode .preview-content { background:#0
     column-gap: 0;
     padding: 0.5rem 0.25rem;
 }
-.reglement-card h3{ 
+.reglement-card h3{
     display:block;
-    background: linear-gradient(90deg, rgba(47,158,68,0.95), rgba(18,115,45,0.95));
+    background: linear-gradient(90deg, rgba(13,110,253,0.95) 0%, rgba(255,122,179,0.95) 100%);
     color: #fff;
     padding:0.45rem 0.75rem;
     margin:0.5rem 0 0.75rem 0;
     border-radius:6px;
     font-size:1rem;
-    box-shadow: 0 6px 18px rgba(2,6,23,0.06);
+    box-shadow: 0 6px 18px rgba(13,110,253,0.06);
+}
+
+/* Ensure med-card headers & section titles match Visite Médicale DA */
+.med-card h2, .psy-card h2 { color: #073763; margin-bottom: 0.4rem }
+.med-card .section-title, .visite-section .section-title, .psy-card .section-title {
+    display:inline-block;
+    background: linear-gradient(90deg, rgba(13,110,253,0.95) 0%, rgba(255,122,179,0.95) 100%);
+    color:#fff;
+    padding:0.45rem 0.8rem;
+    border-radius:6px;
+    font-weight:700;
+    margin-bottom:0.8rem;
 }
 .reglement-card p{ 
     margin:0 0 0.6rem 0; 
@@ -119,7 +138,7 @@ body.dark-mode .preview-box pre, body.dark-mode .preview-content { background:#0
 }
 
 .reg-section { margin-bottom:0.18rem; border-radius:6px; overflow:hidden; }
-.reg-toggle{ width:100%; text-align:left; background:linear-gradient(90deg, rgba(47,158,68,0.95), rgba(18,115,45,0.95)); color:#fff; border:0; padding:0.6rem 0.8rem; font-weight:700; font-size:1rem; display:flex; align-items:center; justify-content:space-between; cursor:pointer; }
+.reg-toggle{ width:100%; text-align:left; background:linear-gradient(90deg, rgba(13,110,253,0.95) 0%, rgba(255,122,179,0.95) 100%); color:#fff; border:0; padding:0.6rem 0.8rem; font-weight:700; font-size:1rem; display:flex; align-items:center; justify-content:space-between; cursor:pointer; }
 .reg-toggle .chev{ margin-left:0.6rem; transition: transform .25s ease; font-size:0.95rem }
 .reg-body{ background: #fff; color:#1b2b2b; padding:0; max-height:0; overflow:hidden; transition: max-height .32s ease, padding .25s ease; border:1px solid rgba(0,0,0,0.04); border-top:0 }
 .reg-section.open{ margin-bottom:0.8rem; }

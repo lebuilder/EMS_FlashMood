@@ -18,6 +18,59 @@ table.psy-table td.select-col {
   text-align: center;
 }
 
+/* Title matching DA: gradient text */
+.psy-card h2{
+  font-size:1.8rem;
+  font-weight:700;
+  margin-bottom:0.35rem;
+  /* DA gradient consistent with site section titles */
+  background: linear-gradient(90deg, rgba(13,110,253,0.95) 0%, rgba(255,122,179,0.95) 100%);
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: transparent;
+  letter-spacing: 0.8px;
+}
+
+/* Card tweaks: increase max width so content is more readable */
+.psy-card { padding:1.5rem; border-radius:12px; max-width:1280px; }
+
+/* Table visual improvements */
+.table-responsive { max-height:70vh; overflow:auto; }
+table.psy-table {
+  border-collapse: separate;
+  border-spacing: 0;
+  width:100%;
+  background: transparent;
+}
+table.psy-table thead th{
+  position: -webkit-sticky; position: sticky; top: 0; z-index:2;
+  /* Match the site's DA gradient so the header follows the title gradient */
+  background: linear-gradient(90deg, rgba(13,110,253,0.95) 0%, rgba(255,122,179,0.95) 100%);
+  color: #fff; border-bottom: 0; padding:14px 12px; font-weight:700; vertical-align:middle;
+}
+table.psy-table tbody tr{ border-bottom:1px solid rgba(0,0,0,0.06); }
+table.psy-table tbody td{ padding:16px 12px; vertical-align:top; color: rgba(0,0,0,0.78); line-height:1.45; font-size:1rem }
+table.psy-table tbody tr:nth-child(even){ background: rgba(11,34,60,0.02); }
+table.psy-table tbody tr:hover{ background: rgba(11,99,163,0.04); }
+
+/* First column (Trouble) emphasis */
+table.psy-table tbody td:first-child{ font-weight:700; color:#0b1220; min-width:200px }
+
+/* Make the table header corners align visually with the card/title */
+table.psy-table thead th:first-child{ border-top-left-radius:8px }
+table.psy-table thead th:last-child{ border-top-right-radius:8px }
+
+/* Scrollbar styling (WebKit) */
+.table-responsive::-webkit-scrollbar{ width:10px; height:10px }
+.table-responsive::-webkit-scrollbar-thumb{ background: rgba(11,99,163,0.25); border-radius:6px }
+.table-responsive::-webkit-scrollbar-track{ background: transparent }
+
+/* Checkbox styling for selection column */
+input.select-disorder { width:18px; height:18px; accent-color: #0b63a3; }
+table.psy-table th.select-col, table.psy-table td.select-col { vertical-align: middle; }
+table.psy-table td.select-col { padding: 10px; }
+@media (max-width:720px){ input.select-disorder{ width:16px; height:16px } }
+
 /* Small card style for each generated item */
 .psy-summary-item {
   padding: 0.6rem;
@@ -30,3 +83,13 @@ table.psy-table td.select-col {
 @media (max-width: 480px){
   #summaryContent { font-size: 0.95rem; }
 }
+
+/* Dark-mode adjustments */
+body.dark-mode table.psy-table tbody td{ color: rgba(223,232,246,0.9); }
+body.dark-mode table.psy-table thead th{
+  background: linear-gradient(90deg, #03243b 0%, #0b3e6a 60%, #8b2a56 100%);
+  color: #f4f8ff;
+}
+body.dark-mode table.psy-table tbody tr:nth-child(even){ background: rgba(255,255,255,0.01); }
+body.dark-mode table.psy-table tbody tr:hover{ background: rgba(255,255,255,0.03); }
+body.dark-mode table.psy-table tbody td:first-child{ color:#cfe8ff }

@@ -1,0 +1,321 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>Certificat — SAMS</title>
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.3.1/dist/css/bootstrap.min.css" crossorigin="anonymous">
+  <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="css/index.css">
+  <link rel="stylesheet" href="css/visite.css">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+  <link rel="stylesheet" href="css/navbar-anim.css">
+  <style>
+    /* small page-specific tweaks */
+    .deces-card{ max-width:980px; margin:1.25rem auto; }
+    .certificate-placeholder{ height:820px; border:2px dashed rgba(0,0,0,0.06); border-radius:8px; background:#fff; display:flex; align-items:center; justify-content:center; overflow:hidden }
+    .certificate-placeholder img{ width:100%; height:100%; object-fit:contain; display:block }
+    @media (max-width:900px){ .certificate-placeholder{ height:520px } }
+  </style>
+</head>
+<body class="animate-page">
+      <nav class="site-navbar">
+    <div class="container d-flex align-items-center justify-content-between">
+      <div class="brand">
+        <div>
+          <div class="title">SAMS</div>
+          <div style="font-size:0.85rem;opacity:0.9">Certificat — Décès</div>
+        </div>
+      </div>
+      <div class="d-flex align-items-center" style="gap:1rem">
+        <a href="index.html" class="text-white mr-3" title="Règlement"><i class="fa fa-book nav-icon" aria-hidden="true"></i>Règlement</a>
+        <a href="Visite_Medical.html" class="text-white mr-3" title="Visite Médicale"><i class="fa fa-stethoscope nav-icon" aria-hidden="true"></i>Visite</a>
+  <a href="psy.html" class="text-white mr-3" title="Psychologie"><i class="fa fa-brain nav-icon" aria-hidden="true"></i>Psychologie</a>
+        <button id="themeToggle" class="theme-toggle" aria-label="Basculer thème">🌙</button>
+      </div>
+    </div>
+  </nav>
+
+  <main class="page-wrapper">
+    <section class="med-card visite-card deces-card">
+      <div class="card-header-visite">
+        <div class="card-header-left">
+          <img src="./media/logo_pillbox.svg" alt="Logo" class="visite-logo" onerror="this.style.display='none'">
+        </div>
+        <div class="card-header-center">
+          <div class="visite-title">CERTIFICAT DE DÉCÈS</div>
+        </div>
+        <div class="card-header-right" aria-hidden="true"></div>
+      </div>
+
+      <div class="card-top-bar">
+        <div class="card-top-title">VOLET ADMINISTRATIF</div>
+      </div>
+
+      <form id="visiteForm" class="visite-form">
+        <!-- Administrative / declaration -->
+        <div class="section-title">VOLET ADMINISTRATIF — DÉCLARATION</div>
+        <div class="form-row mt-3">
+          <div class="col-md-6 mb-2">
+            <label class="label">Médecin déclarant (nom et prénom)</label>
+            <input type="text" name="medecin_declarant" class="form-control visite-input" placeholder="Nom du médecin">
+          </div>
+          <div class="col-md-6 mb-2">
+            <label class="label">Date et heure du décès (estimée ou constatée)</label>
+            <input type="datetime-local" name="date_heure_deces" class="form-control visite-input">
+          </div>
+        </div>
+        <div class="form-row">
+          <div class="col-md-8 mb-2">
+            <label class="label">Lieu du constat</label>
+            <input type="text" name="lieu_constat" class="form-control visite-input" placeholder="Hôpital, adresse, etc.">
+          </div>
+          <div class="col-md-4 mb-2">
+            <label class="label">Situation constat</label>
+            <input type="text" name="situation_constat" class="form-control visite-input" placeholder="(ex: sur place, à domicile)">
+          </div>
+        </div>
+
+        <!-- Civil information -->
+        <div class="section-title">ÉTAT CIVIL DU DÉFUNT</div>
+        <div class="form-row mt-3">
+          <div class="col-md-4 mb-2">
+            <label class="label">Nom</label>
+            <input type="text" name="nom" class="form-control visite-input" placeholder="Nom">
+          </div>
+          <div class="col-md-4 mb-2">
+            <label class="label">Prénom</label>
+            <input type="text" name="prenom" class="form-control visite-input" placeholder="Prénom">
+          </div>
+          <div class="col-md-4 mb-2">
+            <label class="label">Date de naissance</label>
+            <input type="date" name="dob" class="form-control visite-input">
+          </div>
+        </div>
+        <div class="form-row">
+          <div class="col-md-6 mb-2">
+            <label class="label">Lieu du décès</label>
+            <input type="text" name="lieu_deces" class="form-control visite-input" placeholder="Ville / Hôpital">
+          </div>
+          <div class="col-md-6 mb-2">
+            <label class="label">Sexe</label>
+            <div>
+              <div class="form-check form-check-inline"><input class="form-check-input" type="radio" name="sexe" id="sexeM" value="M"><label class="form-check-label" for="sexeM">Masculin</label></div>
+              <div class="form-check form-check-inline"><input class="form-check-input" type="radio" name="sexe" id="sexeF" value="F"><label class="form-check-label" for="sexeF">Féminin</label></div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Funeral / medico-legal information -->
+        <div class="section-title">INFORMATIONS FUNÉRAIRES / MÉDICO-LÉGALES</div>
+        <div class="form-row mt-3">
+          <div class="col-md-6 mb-2">
+            <label class="label">Obstacle médico-légal</label>
+            <div>
+              <div class="form-check form-check-inline"><input class="form-check-input" type="checkbox" id="obstacleOui" name="obstacle_medico" value="oui"><label class="form-check-label" for="obstacleOui">Oui</label></div>
+              <div class="form-check form-check-inline"><input class="form-check-input" type="checkbox" id="obstacleNon" name="obstacle_medico_non" value="non"><label class="form-check-label" for="obstacleNon">Non</label></div>
+            </div>
+          </div>
+          <div class="col-md-6 mb-2">
+            <label class="label">Obligation au don du corps à la science</label>
+            <div>
+              <div class="form-check form-check-inline"><input class="form-check-input" type="checkbox" id="donOui" name="don_science" value="oui"><label class="form-check-label" for="donOui">Oui</label></div>
+              <div class="form-check form-check-inline"><input class="form-check-input" type="checkbox" id="donNon" name="don_science_non" value="non"><label class="form-check-label" for="donNon">Non</label></div>
+            </div>
+          </div>
+        </div>
+
+        <div class="form-row">
+          <div class="col-md-6 mb-2">
+            <label class="label">Recherche de la cause du décès / autopsie</label>
+            <div>
+              <div class="form-check form-check-inline"><input class="form-check-input" type="checkbox" id="rechOui" name="recherche_cause" value="oui"><label class="form-check-label" for="rechOui">Oui</label></div>
+              <div class="form-check form-check-inline"><input class="form-check-input" type="checkbox" id="rechNon" name="recherche_cause_non" value="non"><label class="form-check-label" for="rechNon">Non</label></div>
+            </div>
+          </div>
+          <div class="col-md-6 mb-2">
+            <label class="label">Délai si transport du corps nécessaire</label>
+            <div class="form-check form-check-inline"><input class="form-check-input" type="checkbox" id="delai48" name="delai_transport" value="48h"><label class="form-check-label" for="delai48">48H</label></div>
+            <div class="form-check form-check-inline"><input class="form-check-input" type="checkbox" id="delai72" name="delai_transport_72" value="72h"><label class="form-check-label" for="delai72">72H</label></div>
+          </div>
+        </div>
+
+        <div class="form-row">
+          <div class="col-md-6 mb-2">
+            <label class="label">Présence identifiée au moment du décès</label>
+            <div>
+              <div class="form-check form-check-inline"><input class="form-check-input" type="checkbox" id="presOui" name="presence_identifiee" value="oui"><label class="form-check-label" for="presOui">Oui</label></div>
+              <div class="form-check form-check-inline"><input class="form-check-input" type="checkbox" id="presNon" name="presence_identifiee_non" value="non"><label class="form-check-label" for="presNon">Non</label></div>
+            </div>
+          </div>
+
+          <div class="col-md-6 mb-2">
+            <label class="label">Prothèse présente / pile (pacemaker)</label>
+            <div>
+              <div class="form-check form-check-inline"><input class="form-check-input" type="checkbox" id="prothOui" name="prothese" value="oui"><label class="form-check-label" for="prothOui">Oui</label></div>
+              <div class="form-check form-check-inline"><input class="form-check-input" type="checkbox" id="prothNon" name="prothese_non" value="non"><label class="form-check-label" for="prothNon">Non</label></div>
+            </div>
+          </div>
+        </div>
+
+        <div class="form-row">
+          <div class="col-12 mb-2">
+            <label class="label">Observations complémentaires / recherche</label>
+            <textarea name="observations" class="form-control visite-input" rows="4"></textarea>
+          </div>
+        </div>
+
+        <!-- RAPPORT D'AUTOPSIE (visuel header like certificate) -->
+        <div class="card-header-visite" style="margin-top:1.25rem">
+          <div class="card-header-left" aria-hidden="true"><!-- spacer to keep title centered; logo removed --></div>
+          <div class="card-header-center">
+            <div class="visite-title">RAPPORT D'AUTOPSIE</div>
+          </div>
+          <div class="card-header-right" aria-hidden="true"></div>
+        </div>
+        <div class="card-top-bar">
+          <div class="card-top-title">INFORMATIONS GÉNÉRALES DU DÉFUNT</div>
+        </div>
+        <div class="form-row mt-3">
+          <div class="col-md-4 mb-2">
+            <label class="label">Rapport N°</label>
+            <input type="text" name="rapport_num" class="form-control visite-input" placeholder="N° Rapport">
+          </div>
+          <div class="col-md-4 mb-2">
+            <label class="label">Date de l'autopsie</label>
+            <input type="date" name="date_autopsie" class="form-control visite-input">
+          </div>
+          <div class="col-md-4 mb-2">
+            <label class="label">Lieu de l'autopsie</label>
+            <input type="text" name="lieu_autopsie" class="form-control visite-input" placeholder="Hôpital / Institut">
+          </div>
+        </div>
+
+        <div class="section-sub">INFORMATIONS GÉNÉRALES DU DÉFUNT</div>
+        <div class="form-row mt-2">
+          <div class="col-md-6 mb-2">
+            <label class="label">Identité du défunt</label>
+            <input type="text" name="identite_defunt" class="form-control visite-input" placeholder="Nom, Prénom">
+          </div>
+          <div class="col-md-2 mb-2">
+            <label class="label">Sexe</label>
+            <div>
+              <div class="form-check form-check-inline"><input class="form-check-input" type="radio" name="aut_sexe" id="aut_sexeM" value="M"><label class="form-check-label" for="aut_sexeM">M</label></div>
+              <div class="form-check form-check-inline"><input class="form-check-input" type="radio" name="aut_sexe" id="aut_sexeF" value="F"><label class="form-check-label" for="aut_sexeF">F</label></div>
+            </div>
+          </div>
+          <div class="col-md-4 mb-2">
+            <label class="label">Date et heures présumée du décès</label>
+            <input type="text" name="aut_date_presumee" class="form-control visite-input" placeholder="__/__/____ à __:__">
+          </div>
+        </div>
+        <div class="form-row">
+          <div class="col-md-6 mb-2">
+            <label class="label">Lieu de découverte du corps</label>
+            <input type="text" name="lieu_decouverte" class="form-control visite-input">
+          </div>
+          <div class="col-md-6 mb-2">
+            <label class="label">Référent judiciaire</label>
+            <input type="text" name="referent_judiciaire" class="form-control visite-input" placeholder="Nom de l'officier/enquêteur">
+          </div>
+        </div>
+
+        <div class="section-sub">EXPERTISE DU DÉFUNT</div>
+        <div class="form-row mt-2">
+          <div class="col-md-6 mb-2">
+            <label class="label">État général du corps</label>
+            <div>
+              <div class="form-check form-check-inline"><input class="form-check-input" type="checkbox" id="etatIntact" name="etat_corps_intact" value="intact"><label class="form-check-label" for="etatIntact">Intact</label></div>
+              <div class="form-check form-check-inline"><input class="form-check-input" type="checkbox" id="etatBless" name="etat_corps_blessures" value="blessures"><label class="form-check-label" for="etatBless">Présence de blessures visibles</label></div>
+              <div class="form-check form-check-inline"><input class="form-check-input" type="checkbox" id="etatDecomp" name="etat_corps_decomp" value="decomposition"><label class="form-check-label" for="etatDecomp">Décomposition partielle</label></div>
+            </div>
+          </div>
+          <div class="col-md-6 mb-2">
+            <label class="label">Vêtements portés</label>
+            <input type="text" name="vetements_portes" class="form-control visite-input">
+          </div>
+        </div>
+
+        <div class="form-row">
+          <div class="col-md-6 mb-2">
+            <label class="label">Présence de tatouages / signes distinctifs</label>
+            <div>
+              <div class="form-check form-check-inline"><input class="form-check-input" type="radio" name="tatouages" id="tatOui" value="oui"><label class="form-check-label" for="tatOui">Oui</label></div>
+              <div class="form-check form-check-inline"><input class="form-check-input" type="radio" name="tatouages" id="tatNon" value="non"><label class="form-check-label" for="tatNon">Non</label></div>
+            </div>
+          </div>
+          <div class="col-md-6 mb-2">
+            <label class="label">Blessures visibles externes</label>
+            <input type="text" name="blessures_visibles" class="form-control visite-input">
+          </div>
+        </div>
+
+        <div class="form-row">
+          <div class="col-12 mb-2">
+            <label class="label">Cause(s) du décès (cocher ce qui s'applique)</label>
+            <div class="d-flex flex-wrap">
+              <div class="form-check mr-3"><input class="form-check-input" type="checkbox" id="cause1" name="cause_deces[]" value="arret_cardiaque"><label class="form-check-label" for="cause1">Arrêt cardiaque</label></div>
+              <div class="form-check mr-3"><input class="form-check-input" type="checkbox" id="cause2" name="cause_deces[]" value="asphyxie"><label class="form-check-label" for="cause2">Asphyxie</label></div>
+              <div class="form-check mr-3"><input class="form-check-input" type="checkbox" id="cause3" name="cause_deces[]" value="hemorragie_interne"><label class="form-check-label" for="cause3">Hémorragie interne</label></div>
+              <div class="form-check mr-3"><input class="form-check-input" type="checkbox" id="cause4" name="cause_deces[]" value="overdose"><label class="form-check-label" for="cause4">Overdose</label></div>
+              <div class="form-check mr-3"><input class="form-check-input" type="checkbox" id="cause5" name="cause_deces[]" value="traumatisme_cranien"><label class="form-check-label" for="cause5">Traumatisme crânien sévère</label></div>
+              <div class="form-check mr-3"><input class="form-check-input" type="checkbox" id="causeOtherChk" name="cause_deces[]" value="autre"><label class="form-check-label" for="causeOtherChk">Autre</label></div>
+              <input type="text" name="cause_deces_autre" class="form-control visite-input ml-3" placeholder="Précisez si autre" style="max-width:320px">
+            </div>
+          </div>
+        </div>
+
+        <div class="form-row">
+          <div class="col-md-6 mb-2">
+            <label class="label">Présence de substances toxiques ou stupéfiants dans le sang</label>
+            <div>
+              <div class="form-check form-check-inline"><input class="form-check-input" type="radio" name="substances" id="subOui" value="oui"><label class="form-check-label" for="subOui">Oui</label></div>
+              <div class="form-check form-check-inline"><input class="form-check-input" type="radio" name="substances" id="subNon" value="non"><label class="form-check-label" for="subNon">Non</label></div>
+            </div>
+          </div>
+          <div class="col-md-6 mb-2">
+            <label class="label">Organes endommagés / anomalies constatées</label>
+            <input type="text" name="organes_endommages" class="form-control visite-input">
+          </div>
+        </div>
+
+        <div class="form-row">
+          <div class="col-md-12 mb-2">
+            <label class="label">Nature du décès</label>
+            <div>
+              <div class="form-check form-check-inline"><input class="form-check-input" type="radio" name="nature_deces" id="nat1" value="naturelle"><label class="form-check-label" for="nat1">Mort naturelle</label></div>
+              <div class="form-check form-check-inline"><input class="form-check-input" type="radio" name="nature_deces" id="nat2" value="accidentelle"><label class="form-check-label" for="nat2">Mort accidentelle</label></div>
+              <div class="form-check form-check-inline"><input class="form-check-input" type="radio" name="nature_deces" id="nat3" value="homicide"><label class="form-check-label" for="nat3">Homicide</label></div>
+              <div class="form-check form-check-inline"><input class="form-check-input" type="radio" name="nature_deces" id="nat4" value="suicide"><label class="form-check-label" for="nat4">Suicide</label></div>
+            </div>
+          </div>
+        </div>
+
+        <div class="section-sub">CONCLUSION MÉDICO-LÉGALES</div>
+        <div class="form-row mt-2">
+          <div class="col-12 mb-2">
+            <label class="label">Observations complémentaires</label>
+            <textarea name="conclusion_observations" class="form-control visite-input" rows="4"></textarea>
+          </div>
+        </div>
+
+        <div class="form-actions">
+          <button id="previewBtn" type="button" class="btn btn-info"><i class="fa fa-eye"></i> Prévisualiser</button>
+          <button id="downloadPdf" type="button" class="btn btn-secondary"><i class="fa fa-download"></i> Télécharger PDF</button>
+          <button type="submit" class="btn btn-primary">Enregistrer</button>
+        </div>
+      </form>
+    </section>
+  </main>
+
+  <script src="js/theme.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.9.3/html2pdf.bundle.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
+  <script>
+    // Ensure jsPDF global normalization like other pages
+    (function(){ try{ if(window.jspdf && window.jspdf.jsPDF && !window.jsPDF){ window.jsPDF = window.jspdf.jsPDF; } if(!window.jsPDF && window.JSPDF){ window.jsPDF = window.JSPDF; } }catch(e){ console.warn('jsPDF normalization failed', e); }})();
+  </script>
+  <script src="js/visite.js" defer></script>
+</body>
+</html>

@@ -1,10 +1,10 @@
 /* Styles for Visite Médicale card */
-.visite-card { background: #fff; border-radius: 8px; padding: 1.25rem; box-shadow: 0 6px 18px rgba(0,0,0,0.06); }
+.visite-card { background: #ffffff; border-radius: 8px; padding: 1.25rem; box-shadow: 0 8px 22px rgba(12,34,63,0.06); }
 .visite-card h2 { font-weight:700; margin-bottom:0.6rem; }
 .visite-section { margin:1rem 0; }
-.visite-section .section-title { display:inline-block; background:#6b2f1f; color:#fff; padding:0.45rem 0.8rem; border-radius:3px; font-weight:700; margin-bottom:0.8rem; }
+.visite-section .section-title { display:inline-block; background: linear-gradient(90deg, rgba(13,110,253,0.95) 0%, rgba(255,122,179,0.95) 100%); color:#fff; padding:0.45rem 0.8rem; border-radius:6px; font-weight:700; margin-bottom:0.8rem; box-shadow: 0 6px 18px rgba(13,110,253,0.06); }
 .form-row .label { font-weight:700; font-size:0.9rem; }
-.form-control.visite-input { border:1px solid #dcd7d3; border-radius:4px; background:#fbfbfb; }
+.form-control.visite-input { border:1px solid rgba(0,0,0,0.06); border-radius:4px; background:#ffffff; }
 .small-input { max-width:120px; }
 .inline-inputs > * { margin-right:0.6rem; }
 .photo-placeholder, .id-placeholder, .workcard-placeholder { height:160px; border:3px dashed #c7b7b2; border-radius:6px; display:flex; align-items:center; justify-content:center; color:#8b7b76; background:linear-gradient(180deg,#fff,#faf7f6); position:relative; overflow:hidden }
@@ -30,8 +30,17 @@
 }
 .vaccin-checkboxes .form-check { display:inline-block; margin-right:0.8rem; }
 .section-sub { font-size:0.95rem; margin-top:0.5rem; color:#333; }
+/* section-sub color in themes */
+body.dark-mode .section-sub { color: #ff7ab3 !important }
+body:not(.dark-mode) .section-sub { color: #073763 }
 .psy-questions textarea { min-height:60px; }
 .form-actions { display:flex; gap:0.6rem; justify-content:flex-end; margin-top:1rem; }
+
+/* Dark-mode tweaks for visite card to avoid pure-black backgrounds */
+body.dark-mode .visite-card { background: #0b1220; color: #dfe8f6 }
+body.dark-mode .visite-card .form-control { background:#ffffff; color:#111 }
+/* make image placeholders slightly muted in dark mode */
+body.dark-mode .photo-placeholder, body.dark-mode .id-placeholder, body.dark-mode .workcard-placeholder { background: linear-gradient(180deg,#0f1724,#0b1220); border-color: rgba(255,255,255,0.06); color:#9aa6b6 }
 
 /* print styling */
 @media print{
@@ -48,4 +57,39 @@
 .pdf-preview-dialog{background:#fff;border-radius:8px;max-width:900px;width:100%;max-height:90vh;overflow:auto;padding:1rem;box-shadow:0 10px 30px rgba(0,0,0,0.35)}
 .pdf-preview-actions{display:flex;gap:0.5rem;justify-content:flex-end;margin-bottom:0.6rem}
 .pdf-preview-close{position:absolute;right:12px;top:12px;background:#fff;border:0;border-radius:4px;padding:6px 8px;cursor:pointer}
+.photo-placeholder img{ width:100%; height:200px; object-fit:cover; border-radius:8px }
+
+/* VISITE MEDICALE custom header (brown theme) */
+.card-header-visite{ display:flex; align-items:center; gap:1rem; margin-bottom:1rem }
+.card-header-left{ width:240px; display:flex; align-items:center; justify-content:center }
+.card-header-right{ width:240px; display:block }
+.visite-logo{ max-width:220px; max-height:120px; display:block }
+.card-header-center{ flex:1; display:flex; align-items:center; justify-content:center; text-align:center }
+.visite-title{ font-size:1.8rem; font-weight:700; letter-spacing:2px; margin:0 }
+/* DA gradient for the title text */
+.visite-title{ background: linear-gradient(90deg, rgba(13,110,253,0.95) 0%, rgba(255,122,179,0.95) 100%); -webkit-background-clip: text; background-clip: text; color: transparent }
+
+/* Card top bar spanning full width below header */
+.card-top-bar{ width:100%; margin-bottom:12px }
+.card-top-title{ width:100%; padding:12px 16px; background: linear-gradient(90deg, rgba(13,110,253,0.95) 0%, rgba(255,122,179,0.95) 100%); color:#fff; font-weight:700; border-radius:6px; text-align:center }
+
+/* Section bars in DA gradient style */
+.visite-card .section-title{ display:block; background: linear-gradient(90deg, rgba(13,110,253,0.95) 0%, rgba(255,122,179,0.95) 100%); color:#fff; padding:10px 12px; border-radius:4px; font-weight:700; margin-bottom:12px }
+
+/* Inputs styled as underlined fields like the mock but matching DA */
+.visite-input{ border:0; border-bottom:2px solid rgba(11,99,163,0.12); background:transparent; border-radius:0; padding:6px 8px }
+.visite-input:focus{ outline:none; border-bottom-color: rgba(13,110,253,0.95); box-shadow:none }
+
+/* compact label layout */
+.visite-form label.label{ font-weight:700; color:#073763; font-size:0.9rem }
+/* Label color switches with theme: blue-night in light, pink in dark theme */
+body.dark-mode .visite-form label.label{ color: #ff7ab3 }
+
+/* Vaccin checkboxes styled to match DA accent */
+.vaccin-checkboxes .form-check { margin-right:12px }
+.vaccin-checkboxes .form-check-input{ width:18px; height:18px; accent-color:#0b63a3 }
+.vaccin-checkboxes .form-check-label{ margin-left:6px }
+
+/* Make the overall card wider and with more internal spacing to show all text */
+.visite-card{ max-width:980px; margin:1.25rem auto; padding:1.5rem; }
 

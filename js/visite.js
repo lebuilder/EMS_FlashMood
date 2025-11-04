@@ -18,32 +18,120 @@
     const inputs = Array.from(container.querySelectorAll('input, textarea, select'));
     inputs.forEach(el => {
       if(el.type === 'radio'){
-        if(!el.checked){
-          // remove unchecked radios
-          el.parentNode && el.parentNode.removeChild(el);
-        } else {
-          const span = document.createElement('div');
-          span.textContent = getFieldText(el);
-          span.style.display = 'inline-block';
-          el.parentNode && el.parentNode.replaceChild(span, el);
+        // Handle radio groups by name: include only the selected option in the PDF
+        try{
+          const name = el.name;
+          if(name){
+            // find radios in the same cloned container with same name
+            const allRadios = Array.from(container.querySelectorAll('input[type="radio"][name="'+name+'"]'));
+            if(allRadios.length){
+              // Determine a sensible group container (parent of the radio items)
+              let group = allRadios[0].closest('.form-check-inline');
+              if(group) group = group.parentNode; // parent of the inline checks
+              if(!group) group = allRadios[0].closest('.form-row') || allRadios[0].parentNode;
+              // avoid double-processing
+              if(group && group.dataset && group.dataset.__pdfProcessed){
+                // remove this individual radio input element since group handled
+                el.parentNode && el.parentNode.removeChild(el);
+                return;
+              }
+              if(group) group.dataset.__pdfProcessed = '1';
+
+              // find the selected radio
+              const checked = allRadios.find(r=>r.checked);
+              const div = document.createElement('div');
+              div.className = 'replaced-field';
+              if(checked){
+                // locate label text associated with the checked radio
+                let lbl = null;
+                if(checked.id){ lbl = group && group.querySelector('label[for="'+checked.id+'"]'); }
+                if(!lbl){ lbl = checked.nextElementSibling && checked.nextElementSibling.tagName === 'LABEL' ? checked.nextElementSibling : null; }
+                if(!lbl){ const parent = checked.closest('.form-check'); if(parent) lbl = parent.querySelector('label'); }
+                const text = (lbl && lbl.textContent) ? lbl.textContent.trim() : (checked.value || '').toString();
+                div.textContent = text;
+              } else {
+                // nothing selected — leave empty
+                div.textContent = '';
+              }
+
+              // Replace the whole group with the selected-text div
+              if(group && group.parentNode){
+                group.parentNode.replaceChild(div, group);
+              } else {
+                // fallback: replace each radio input by nothing
+                allRadios.forEach(r=>{ r.parentNode && r.parentNode.removeChild(r); });
+              }
+              return;
+            }
+          }
+        }catch(e){
+          console.warn('Radio group processing failed, falling back to per-input handling', e);
         }
+
+  // fallback per-input handling: keep only checked radio
+  if(!el.checked){ el.parentNode && el.parentNode.removeChild(el); }
+  else { const span = document.createElement('div'); span.className = 'replaced-field'; span.textContent = getFieldText(el); span.style.display = 'inline-block'; el.parentNode && el.parentNode.replaceChild(span, el); }
         return;
       }
 
       if(el.type === 'checkbox'){
-        // show label text if present; otherwise 'Oui/Non'
-        const span = document.createElement('div');
-        span.textContent = el.checked ? 'Oui' : 'Non';
-        el.parentNode && el.parentNode.replaceChild(span, el);
+        // For grouped checkboxes (eg. vaccines), only include checked items in the PDF.
+        // Try to find a logical group container inside the cloned card first.
+        const group = el.closest('.vaccin-checkboxes') || el.closest('.form-check-inline') || el.closest('.form-row');
+        if(group){
+          // process group only once
+          if(group.dataset && group.dataset.__pdfProcessed) {
+            // remove this input element since group will be handled
+            el.parentNode && el.parentNode.removeChild(el);
+            return;
+          }
+          group.dataset.__pdfProcessed = '1';
+          const checkboxes = Array.from(group.querySelectorAll('input[type="checkbox"]'));
+          const checked = checkboxes.filter(cb=>cb.checked).map(cb=>{
+            // find label associated inside group
+            let lbl = null;
+            if(cb.id){ lbl = group.querySelector('label[for="'+cb.id+'"]'); }
+            if(!lbl){
+              // try sibling label
+              lbl = cb.nextElementSibling && cb.nextElementSibling.tagName === 'LABEL' ? cb.nextElementSibling : null;
+            }
+            if(!lbl){
+              // fallback: try parent .form-check label
+              const parent = cb.closest('.form-check');
+              if(parent) lbl = parent.querySelector('label');
+            }
+            const text = (lbl && lbl.textContent) ? lbl.textContent.trim() : (cb.value || '').toString();
+            return text;
+          }).filter(Boolean);
+          const div = document.createElement('div');
+          div.className = 'replaced-field';
+          if(checked.length){
+            const ul = document.createElement('ul');
+            checked.forEach(t=>{ const li = document.createElement('li'); li.textContent = t; ul.appendChild(li); });
+            div.appendChild(ul);
+          } else {
+            // if nothing checked, insert empty placeholder (omit content in PDF)
+            div.textContent = '';
+          }
+          // Replace the whole group element with the aggregate div
+          group.parentNode && group.parentNode.replaceChild(div, group);
+          return;
+        }
+        // fallback: show Oui/Non for standalone checkboxes
+  const span = document.createElement('div');
+  span.className = 'replaced-field';
+  span.textContent = el.checked ? 'Oui' : 'Non';
+  el.parentNode && el.parentNode.replaceChild(span, el);
         return;
       }
 
       // regular input / textarea / select
-      const span = document.createElement('div');
-      span.textContent = getFieldText(el);
-      span.style.whiteSpace = 'pre-wrap';
-      span.style.marginTop = '4px';
-      el.parentNode && el.parentNode.replaceChild(span, el);
+  const span = document.createElement('div');
+  span.className = 'replaced-field';
+  span.textContent = getFieldText(el);
+  span.style.whiteSpace = 'pre-wrap';
+  span.style.marginTop = '4px';
+  el.parentNode && el.parentNode.replaceChild(span, el);
     });
   }
 
@@ -69,6 +157,22 @@
     });
   }
 
+  // Load a Google Font stylesheet and wait for the font to be ready
+  function ensureFontLoaded(fontName, fontUrl){
+    return new Promise((resolve)=>{
+      // add link if not present
+      if(!document.querySelector('link[data-font="'+fontName+'"]')){
+        const l = document.createElement('link'); l.rel='stylesheet'; l.href = fontUrl; l.setAttribute('data-font', fontName); document.head.appendChild(l);
+      }
+      // try to use Font Loading API
+      if(document.fonts && document.fonts.load){
+        document.fonts.load('16px "'+fontName+'"').then(()=>{ resolve(); }).catch(()=>{ document.fonts.ready.then(()=>resolve()).catch(()=>resolve()); });
+      } else {
+        setTimeout(()=>resolve(), 500);
+      }
+    });
+  }
+
   function generateFilename(){
     const nom = (document.querySelector('input[name="nom"]') || {}).value || '';
     const id = (document.querySelector('input[name="id"]') || {}).value || '';
@@ -87,12 +191,33 @@
 
     // clone the card so we can modify it for print without disturbing the page
     const clone = cardEl.cloneNode(true);
+
+    // Helper: inject a small stylesheet to force a light appearance for the cloned export
+    function addPdfLightStyle(){
+      if(document.getElementById('pdfLightStyle')) return;
+      const s = document.createElement('style');
+      s.id = 'pdfLightStyle';
+      s.type = 'text/css';
+      s.textContent = '\n.pdf-light-mode, .pdf-light-mode * { background: #ffffff !important; color: #0b1220 !important; border-color: rgba(0,0,0,0.08) !important; box-shadow: none !important; }\n.pdf-light-mode img{ filter: none !important; }\n.pdf-light-mode .theme-toggle{ display:none !important; }\n';
+      document.head.appendChild(s);
+    }
+  function removePdfLightStyle(){ const s = document.getElementById('pdfLightStyle'); if(s) s.parentNode.removeChild(s); }
+  function addPdfExportStyle(){ if(document.getElementById('pdfExportStyle')) return; const s = document.createElement('style'); s.id='pdfExportStyle'; s.type='text/css'; s.textContent = '\n.pdf-export .replaced-field{ font-family: "Patrick Hand", "Segoe Script", cursive !important; color: #000 !important; font-size:14px !important; }\n.pdf-export .visite-title{ background:none !important; -webkit-background-clip:initial !important; color:#073763 !important; }\n.pdf-export .section-title{ color:#fff !important }\n'; document.head.appendChild(s); }
+  function removePdfExportStyle(){ const s = document.getElementById('pdfExportStyle'); if(s) s.parentNode.removeChild(s); }
+  function cleanupTmpExport(){ const el = document.getElementById('tmpPdfExport'); el && el.parentNode.removeChild(el); removePdfLightStyle(); removePdfExportStyle(); }
     // ensure inputs are replaced with text
     replaceInputsWithText(clone);
 
     // remove interactive-only elements (buttons)
-    const buttons = clone.querySelectorAll('button');
-    buttons.forEach(b => b.parentNode && b.parentNode.removeChild(b));
+  const buttons = clone.querySelectorAll('button');
+  buttons.forEach(b => b.parentNode && b.parentNode.removeChild(b));
+
+  // Optionally force the clone into a light-theme appearance.
+  // Default: do NOT force for the Visite card so the PDF keeps the page styling (brown header etc).
+  if(cardEl.classList && cardEl.classList.contains && cardEl.classList.contains('pdf-force-light')){
+    addPdfLightStyle();
+    clone.classList.add('pdf-light-mode');
+  }
 
   // put clone in a visible location so renderers can capture it reliably
   // Use a fixed top-left placement (briefly visible) to avoid off-screen blank renders
@@ -109,6 +234,12 @@
   // add small visible border while debugging; removed in production if needed
   // clone.style.outline = '1px solid rgba(0,0,0,0.02)';
   document.body.appendChild(clone);
+
+  // Prepare PDF-specific styling and fonts so the exported document matches expectations
+  addPdfExportStyle();
+  clone.classList.add('pdf-export');
+  const pdfFontName = 'Patrick Hand';
+  const pdfFontUrl = 'https://fonts.googleapis.com/css2?family=Patrick+Hand&display=swap';
 
     const opt = {
       margin:       10,
@@ -138,8 +269,10 @@
       });
     }
 
-    // call html2pdf after images are ready; Chrome sometimes renders blank with html2pdf/html2canvas
-    waitForImages(clone, 10000).then(()=>{
+    // call html2pdf after fonts & images are ready; Chrome sometimes renders blank with html2pdf/html2canvas
+    ensureFontLoaded(pdfFontName, pdfFontUrl).then(()=>{
+      return waitForImages(clone, 10000);
+    }).then(()=>{
       const ua = navigator.userAgent || '';
       const isChrome = /Chrome\//.test(ua) && !/Edg\//.test(ua) && !/OPR\//.test(ua);
       if(isChrome){
@@ -167,9 +300,7 @@
             if(!JsPDFCtor){
               console.warn('jsPDF constructor not available; falling back to html2pdf');
               // try html2pdf fallback
-              html2pdf().set(opt).from(clone).save().then(()=>{
-                const el = document.getElementById('tmpPdfExport'); el && el.parentNode.removeChild(el);
-              }).catch(e2=>{ console.error('html2pdf error after missing jsPDF', e2); alert('Erreur lors de la génération du PDF. Consultez la console.'); const el = document.getElementById('tmpPdfExport'); el && el.parentNode.removeChild(el); });
+              html2pdf().set(opt).from(clone).save().then(()=>{ cleanupTmpExport(); }).catch(e2=>{ console.error('html2pdf error after missing jsPDF', e2); alert('Erreur lors de la génération du PDF. Consultez la console.'); cleanupTmpExport(); });
               return;
             }
             const pdf = new JsPDFCtor(opt.jsPDF || { unit: 'mm', format: 'a4', orientation: 'portrait' });
@@ -190,35 +321,18 @@
             console.error('Fallback pdf generation error', err);
             alert('Erreur lors de la génération du PDF (fallback). Voir console.');
           } finally {
-            const el = document.getElementById('tmpPdfExport');
-            el && el.parentNode.removeChild(el);
+            cleanupTmpExport();
           }
         }).catch(err=>{
           console.warn('html2canvas fallback failed or not available, falling back to html2pdf', err);
           // fallback to default html2pdf flow
-          html2pdf().set(opt).from(clone).save().then(()=>{
-            const el = document.getElementById('tmpPdfExport');
-            el && el.parentNode.removeChild(el);
-          }).catch(e2=>{
-            console.error('html2pdf error after html2canvas failure', e2);
-            alert('Erreur lors de la génération du PDF. Consultez la console.');
-            const el = document.getElementById('tmpPdfExport');
-            el && el.parentNode.removeChild(el);
-          });
+          html2pdf().set(opt).from(clone).save().then(()=>{ cleanupTmpExport(); }).catch(e2=>{ console.error('html2pdf error after html2canvas failure', e2); alert('Erreur lors de la génération du PDF. Consultez la console.'); cleanupTmpExport(); });
         });
         return;
       }
 
       // default path using html2pdf
-      html2pdf().set(opt).from(clone).save().then(()=>{
-        const el = document.getElementById('tmpPdfExport');
-        el && el.parentNode.removeChild(el);
-      }).catch(err=>{
-        console.error('html2pdf error', err);
-        alert('Erreur lors de la génération du PDF. Consultez la console.');
-        const el = document.getElementById('tmpPdfExport');
-        el && el.parentNode.removeChild(el);
-      });
+      html2pdf().set(opt).from(clone).save().then(()=>{ cleanupTmpExport(); }).catch(err=>{ console.error('html2pdf error', err); alert('Erreur lors de la génération du PDF. Consultez la console.'); cleanupTmpExport(); });
     });
   }
 
@@ -232,59 +346,7 @@
         generatePdfFromCard(card);
       });
     }
-    // Open printable view (fallback) button
-    const openPrintableBtn = document.getElementById('openPrintable');
-    function openPrintableView(sourceCard){
-      const clone = sourceCard.cloneNode(true);
-      replaceInputsWithText(clone);
-      // remove interactive elements
-      const buttons = clone.querySelectorAll('button'); buttons.forEach(b=>b.parentNode && b.parentNode.removeChild(b));
-
-      // compute base href so relative CSS and images resolve in the new window
-      const loc = window.location.href;
-      const baseHref = loc.replace(/\/[^\/]*$/, '/');
-
-      // build minimal HTML for printable window
-      const headHtml = `<!doctype html><html><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">`;
-      const baseTag = `<base href="${baseHref}">`;
-      // include the same stylesheets (relative paths) — baseTag makes these resolve correctly
-      const cssLinks = [`<link rel="stylesheet" href="css/index.css">`,`<link rel="stylesheet" href="css/visite.css">`].join('\n');
-      const bodyHtml = `<body style="background:#fff;padding:20px">${clone.outerHTML}</body></html>`;
-      const final = headHtml + baseTag + cssLinks + '</head>' + bodyHtml;
-
-      const w = window.open('', '_blank');
-      if(!w){ alert('Impossible d\'ouvrir une nouvelle fenêtre. Autorisez les popups pour ce site.'); return; }
-      w.document.open();
-      w.document.write(final);
-      w.document.close();
-
-      // wait for images to load in the new window, with a timeout
-      function waitForImages(win, timeout=7000){
-        return new Promise((resolve)=>{
-          try{
-            const imgs = win.document.images;
-            if(!imgs || imgs.length===0) return setTimeout(resolve, 50);
-            let remaining = imgs.length;
-            const timer = setTimeout(()=>{ resolve(); }, timeout);
-            for(const img of imgs){
-              if(img.complete && img.naturalWidth>0){
-                remaining--;
-                if(remaining===0){ clearTimeout(timer); resolve(); }
-              } else {
-                img.addEventListener('load', ()=>{ remaining--; if(remaining===0){ clearTimeout(timer); resolve(); } }, {once:true});
-                img.addEventListener('error', ()=>{ remaining--; if(remaining===0){ clearTimeout(timer); resolve(); } }, {once:true});
-              }
-            }
-          }catch(e){ console.warn('waitForImages failed', e); resolve(); }
-        });
-      }
-
-      // after resources load (or timeout), focus and open print dialog
-      waitForImages(w, 7000).then(()=>{
-        try{ w.focus(); setTimeout(()=>{ try{ w.print(); }catch(e){ console.warn('print failed', e); } }, 250); }catch(e){ console.warn('focus/print failed', e); }
-      });
-    }
-    openPrintableBtn && openPrintableBtn.addEventListener('click', (e)=>{ e.preventDefault(); openPrintableView(card); });
+    // (printable-window feature removed) — printing buttons were removed from the page and this fallback is disabled
 
     // Preview logic: clone card, replace inputs with text and show in modal
     function showPreview(sourceCard){
@@ -343,10 +405,12 @@
     }
 
     // attach file input changes and buttons
-    document.querySelectorAll('.image-controls button[data-target]').forEach(btn=>{
+    // Only bind the file-picker trigger to the "Charger" buttons — exclude delete buttons
+    document.querySelectorAll('.image-controls button[data-target]:not(.image-delete-btn)').forEach(btn=>{
       const target = btn.getAttribute('data-target');
       const cfg = imageTargets[target];
       if(!cfg) return;
+      // If this button is not the delete button, clicking should open the file picker
       btn.addEventListener('click', ()=>{ cfg.input && cfg.input.click(); });
     });
 
@@ -371,38 +435,7 @@
       }
     });
 
-    // Paste handling: user clicks a 'Coller' button which sets currentPasteTarget, then paste event is handled
-    let currentPasteTarget = null;
-    document.querySelectorAll('button[id$="PasteBtn"]').forEach(btn=>{
-      btn.addEventListener('click', ()=>{
-        currentPasteTarget = btn.getAttribute('data-target');
-        // give a short instruction by focusing the area
-        const area = imageTargets[currentPasteTarget] && imageTargets[currentPasteTarget].area;
-        area && area.focus();
-        // inform user briefly
-        btn.textContent = 'Prêt — appuyez sur Ctrl+V';
-        setTimeout(()=>{ btn.innerHTML = 'Coller (Ctrl+V)'; },3000);
-      });
-    });
-
-    document.addEventListener('paste', (ev)=>{
-      if(!ev.clipboardData) return;
-      const items = ev.clipboardData.items;
-      if(!items) return;
-      for(let i=0;i<items.length;i++){
-        const it = items[i];
-        if(it.type.indexOf('image') !== -1){
-          const blob = it.getAsFile();
-          if(!blob) continue;
-          const targetKey = currentPasteTarget || 'photo';
-          const cfg = imageTargets[targetKey];
-          if(cfg && cfg.img){ loadImageFileToImg(blob, cfg.img); }
-          currentPasteTarget = null;
-          ev.preventDefault();
-          return;
-        }
-      }
-    });
+    // Paste feature removed at user's request — no paste handlers bound
 
     // Delete image buttons
     document.querySelectorAll('.image-controls button.image-delete-btn[data-target]').forEach(btn=>{
